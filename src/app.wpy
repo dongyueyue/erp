@@ -1,0 +1,53 @@
+<style lang="less">
+page{
+  width: 100%;
+  height: 100%;
+}
+</style>
+
+<script>
+import wepy from '@wepy/core';
+import eventHub from './common/eventHub';
+import vuex from '@wepy/x';
+
+wepy.use(vuex);
+
+
+wepy.app({
+  hooks: {
+    // App 级别 hook，对整个 App 生效
+    // 同时存在 Page hook 和 App hook 时，优先执行 Page hook，返回值再交由 App hook 处
+    'before-setData': function (dirty) {
+      console.log('setData dirty: ', dirty);
+      return dirty;
+    }
+  },
+  globalData: {
+    userInfo: null
+  },
+
+  onLaunch() {
+
+  },
+
+  methods: {
+
+
+  }
+});
+</script>
+<config>
+{
+    pages: [
+
+      'pages/login',
+      'pages/index'
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    }
+}
+</config>

@@ -1,0 +1,58 @@
+
+<wxs module="m1" lang="babel">
+
+</wxs>
+<template>
+  <view class="">
+
+  </view>
+</template>
+<script>
+  import wepy from '@wepy/core'
+  import eventHub from '../common/eventHub';
+  import { mapState } from '@wepy/x';
+  import store from '../store';
+  import testMixin from '../mixins/test'
+
+  wepy.page({
+    store,
+    config: {
+      navigationBarTitleText: 'test'
+    },
+
+    hooks: {
+      // Page 级别 hook, 只对当前 Page 的 setData 生效。
+      'before-setData': function (dirty) {
+
+        return dirty;
+      }
+    },
+
+
+
+    mixins: [testMixin],
+
+    data: {
+      name:'lixiao'
+    },
+
+    computed: {
+//      ...mapState([ 'counter' ]),
+//      testcomputed () {
+//        return 'computed - ' + this.mynum;
+//      }
+    },
+
+    methods:{
+
+    },
+
+    created () {
+
+    },
+  });
+</script>
+<style lang="less">
+
+</style>
+
