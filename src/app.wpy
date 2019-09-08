@@ -39,15 +39,17 @@ wepy.app({
 <config>
 {
     pages: [
-      'pages/rundetail',
+
       'pages/login',
-      'pages/index'
+      'pages/home-index',
+      'pages/rundetail'
     ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black'
-    }
+    },
+
 }
 </config>

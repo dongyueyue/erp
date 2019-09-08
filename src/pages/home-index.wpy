@@ -1,0 +1,209 @@
+<wxs module="m1" lang="babel">
+
+</wxs>
+<template>
+    <view class="home">
+        <view class="home-item">
+            <view class="home-item-title">福跑团第26期</view>
+            <view class="home-match-list">
+
+            </view>
+        </view>
+        <view class="home-item">
+            <view class="home-item-title">约跑</view>
+            <view class="home-active-list">
+                <view class="home-active-list-item" style="background-image: url('https://f11.baidu.com/it/u=3242928727,3287993420&fm=72')">
+                    <text class="home-active-list-item-title">约跑活动名称</text>
+                    <text class="home-active-list-item-msg">参与人数: 1238人</text>
+                    <text class="home-active-list-item-msg">2019.02.22 06:30</text>
+                    <text class="status">报名中</text>
+                </view>
+                <view class="home-active-list-item" style="background-image: url('https://f11.baidu.com/it/u=3242928727,3287993420&fm=72')">
+                    <text class="home-active-list-item-title">约跑活动名称</text>
+                    <text class="home-active-list-item-msg">参与人数: 1238人</text>
+                    <text class="home-active-list-item-msg">2019.02.22 06:30</text>
+                    <text class="status">报名中</text>
+                </view>
+                <view class="home-active-list-item" style="background-image: url('https://f11.baidu.com/it/u=3242928727,3287993420&fm=72')">
+                    <text class="home-active-list-item-title">约跑活动名称</text>
+                    <text class="home-active-list-item-msg">参与人数: 1238人</text>
+                    <text class="home-active-list-item-msg">2019.02.22 06:30</text>
+                    <text class="status">报名中</text>
+                </view>
+            </view>
+        </view>
+
+    </view>
+</template>
+<script>
+    import wepy from '@wepy/core'
+    import eventHub from '../common/eventHub';
+//    import store from '../store';
+    import testMixin from '../mixins/test';
+    wepy.page({
+//        store,
+        config: {
+            navigationBarTitleText: 'test',
+
+        },
+
+        hooks: {
+            // Page 级别 hook, 只对当前 Page 的 setData 生效。
+            'before-setData': function (dirty) {
+
+            }
+        },
+
+
+
+        mixins: [testMixin],
+
+        data: {
+            name:'lixiao',
+            markers:[
+                {
+                    id:0,
+                    latitude: 23.099994,
+                    longitude: 113.324520,
+                    title:'haha',
+                    iconPath:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567919241294&di=405aaa21db3b7a70a840b2b691c1dc14&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201405%2F27%2F20140527174544_K8Zsr.thumb.600_0.jpeg',
+                    callout:{
+                        content:'haha',
+                        color:'red',
+                        fontSize:'22'
+                    }
+                }
+            ]
+        },
+
+        computed: {
+//      ...mapState([ 'counter' ]),
+//      testcomputed () {
+//        return 'computed - ' + this.mynum;
+//      }
+        },
+
+        methods:{
+            test(e){
+                console.log(e)
+            }
+        },
+
+        created () {
+
+
+        }
+    });
+</script>
+<style lang="less">
+    page{
+        background:#F4F5F9;
+    }
+    .home{
+        background:#F4F5F9;
+        min-height:100%;
+        padding-top:108rpx;
+        padding-bottom:2rpx;
+        box-sizing:border-box;
+        .home-item{
+            width: 750rpx;
+            padding: 39rpx 0;
+            background:rgba(255,255,255,1);
+            border-radius:30rpx;
+            margin-bottom:20rpx;
+            position: relative;
+            padding-top:112rpx;
+            .home-item-title{
+                font-size:32rpx;
+                font-weight: bold;
+                color:#333333;
+                padding-left:33rpx;
+                height: 33rpx;
+                line-height: 33rpx;
+                position:absolute;
+                left:0;
+                top:39rpx;
+                &:before{
+                    content:'';
+                    width: 8rpx;
+                    height: 33rpx;
+                    background: #E5210D;
+                    position: absolute;
+                    left:16rpx;
+                    top:0rpx;
+                 }
+            }
+            .home-active-list{
+                padding-left:45rpx;
+                .home-active-list-item{
+                    width: 660rpx;
+                    height: 254rpx;
+                    box-shadow:0px 0px 10px 0px rgba(153,102,204,0.14);
+                    border-radius:8rpx;
+                    background: #000 no-repeat;
+                    background-size:cover;
+                    padding-top:70rpx;
+                    box-sizing:border-box;
+                    position:relative;
+                    margin-bottom:28rpx;
+                    .home-active-list-item-title{
+                        font-size:40rpx;
+                        font-weight:bold;
+                        color:#fff;
+                        width: 600rpx;
+                        margin:0 auto;
+                        text-align: center;
+                        display: block;
+                        margin-bottom:30rpx;
+                    }
+                    .home-active-list-item-msg{
+                        display: block;
+                        height: 20rpx;
+                        line-height:20rpx;
+                        font-size:20rpx;
+                        color:#fff;
+                        text-align: center;
+                        margin-bottom:24rpx;
+                    }
+                    .status{
+                        position:absolute;
+                        right:16rpx;
+                        top:16rpx;
+                        font-size:20rpx;
+                        font-weight:bold;
+                        color:#fff;
+                    }
+                }
+            }
+        }
+    }
+</style>
+<config>
+    {
+        "usingComponents": {
+            "tabbar": "../components/home-tab-bar"
+        },
+        "tabBar": {
+            "custom": false,
+            "color": "#7A7E83",
+            "selectedColor": "#3cc51f",
+            "borderStyle": "black",
+            "backgroundColor": "#ffffff",
+            "list": [
+            {
+            "pagePath": "pages/login",
+            "iconPath": "",
+            "selectedIconPath": "",
+            "text": "组件"
+            },
+            {
+            "pagePath": "pages/login",
+            "iconPath": "",
+            "selectedIconPath": "",
+            "text": "接口"
+            }
+            ]
+        },
+    }
+</config>
+

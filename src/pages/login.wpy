@@ -2,22 +2,33 @@
 
 </wxs>
 <template>
+
   <view class="login">
-    <view class="icon"></view>
-    <view class="input-item">
-      <label>请输入手机号</label>
-      <input>
+    <view v-show="type==1">
+      <text class="title">检测到当前微信已在EPK注册，确认使用该账号？</text>
+      <view>
+       
+        <view class="protrait">
+          <text>用户昵称</text>
+        </view>
+      </view>
     </view>
-    <view class="input-item">
-      <label>请输入密码</label>
-      <input type="password" >
+    <view v-show="type==2">
+      <view class="icon"></view>
+      <view class="input-item">
+        <input placeholder="请输入手机号" placeholder-style="color:rgba(237,237,237,.8);">
+      </view>
+      <view class="input-item">
+        <input type="password" placeholder="请输入密码" placeholder-style="color:rgba(237,237,237,.8);">
+      </view>
+      <view class="turn-link">
+        <text>忘记密码</text>
+        <text class="line">|</text>
+        <text>用户注册</text>
+      </view>
+      <view class="l-btn">登录</view>
     </view>
-    <view class="turn-link">
-      <text>忘记密码</text>
-      <text class="line">|</text>
-      <text>用户注册</text>
-    </view>
-    <view class="l-btn">登录</view>
+
   </view>
 </template>
 <script>
@@ -44,14 +55,14 @@
     mixins: [testMixin],
 
     data: {
-      name:'lixiao'
+      name:'lixiao',
+      type:1,
     },
 
     computed: {
-//      ...mapState([ 'counter' ]),
-//      testcomputed () {
-//        return 'computed - ' + this.mynum;
-//      }
+      user(){
+        return this.$store.state.auth.user
+      }
     },
 
     methods:{
@@ -59,7 +70,20 @@
     },
 
     created () {
-
+//      store.dispatch('initUser');
+      wx.getSetting({
+        success(res) {
+          if (!res.authSetting['scope.userInfo']) {
+            wx.authorize({
+              scope: 'scope.userInfo',
+              success () {
+                // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+                wx.startRecord()
+              }
+            })
+          }
+        }
+      })
 
     }
   });
@@ -73,7 +97,14 @@
     background-size:cover;
     box-sizing: border-box;
     padding-top: 1rpx;
-
+    .title{
+      font-size:42rpx;
+      text-align: center;
+      width:570rpx;
+      margin:200rpx auto 0;
+      color: #fff;
+      display:block;
+    }
     .icon{
       width:159rpx;
       height:159rpx;
