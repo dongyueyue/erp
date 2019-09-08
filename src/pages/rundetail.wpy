@@ -1,0 +1,119 @@
+<wxs module="m1" lang="babel">
+
+</wxs>
+<template>
+    <view class="rundetail">
+        <view class="banner">
+            <view class="title">奥森公园约跑</view>
+            <view class="des">[一起来PK跑团]</view>
+        </view>
+        <view class="section">
+            <view class="s-title">约跑信息</view>
+        </view>
+        <view class="section">
+            <view class="s-title">活动内容</view>
+        </view>
+        <view class="section">
+            <view class="s-title">提示</view>
+        </view>
+        <view class="section">
+            <view class="s-title">约跑地点</view>
+        </view>
+        <view class="section">
+            <view class="s-title">已报名人员</view>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from '@wepy/core'
+    import eventHub from '../common/eventHub';
+    import store from '../store';
+    import testMixin from '../mixins/test'
+
+    wepy.page({
+        store,
+        config: {
+            navigationBarTitleText: 'test'
+        },
+
+        hooks: {
+            // Page 级别 hook, 只对当前 Page 的 setData 生效。
+            'before-setData': function (dirty) {
+
+            }
+        },
+
+
+
+        mixins: [testMixin],
+
+        data: {
+            name:'lixiao'
+        },
+
+        computed: {
+//      ...mapState([ 'counter' ]),
+//      testcomputed () {
+//        return 'computed - ' + this.mynum;
+//      }
+        },
+
+        methods:{
+
+        },
+
+        created () {
+
+
+        }
+    });
+</script>
+<style lang="less">
+    .rundetail{
+        .banner{
+            height: 360rpx;
+            background: #000;
+            box-sizing:border-box;
+            padding-top:100rpx;
+            margin-bottom:60rpx;
+            .title{
+                color: #fff;
+                font-size: 56rpx;
+                text-align: center;
+                margin-bottom: 28rpx;
+            }
+            .des{
+                color: #fff;
+                font-size: 30rpx;
+                text-align: center;
+            }
+        }
+        .section{
+            box-shadow:0px 0px 16rpx 0px rgba(153,100,206,0.18);
+            border-radius:15rpx;
+            width: 624rpx;
+            min-height:430rpx;
+            margin: 0 auto 70rpx;
+            padding-top:112rpx;
+            position:relative;
+            box-sizing:border-box;
+            height:48rpx;
+
+            .s-title{
+                height: 48rpx;
+                padding:10rpx 20rpx 10rpx 16rpx;
+                font-size:30rpx;
+                text-align: center;
+                position: absolute;
+                color:#fff;
+                top:30rpx;
+                left:0;
+                background:rgba(153,100,206,1);
+                border-radius:0px 30rpx 30rpx 0px;
+                display:flex;
+                align-items:center;
+            }
+        }
+    }
+</style>
+

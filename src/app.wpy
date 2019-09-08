@@ -39,7 +39,7 @@ wepy.app({
 <config>
 {
     pages: [
-
+      'pages/rundetail',
       'pages/login',
       'pages/index'
     ],
