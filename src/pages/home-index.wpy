@@ -2,11 +2,67 @@
 
 </wxs>
 <template>
-    <view class="home">
+    <view class="home" v-if="login">
+        <view class="home-title">
+            <view class="logo">EPK</view>
+            <text class="word">进入App与跑友一起参与PK</text>
+            <view class="btn">立刻打开</view>
+        </view>
         <view class="home-item">
             <view class="home-item-title">福跑团第26期</view>
-            <view class="home-match-list">
-
+            <view class="toggle" @click="rankbar=!rankbar"></view>
+            <view class="home-match-list rankbar" v-show="rankbar">
+                <view class="progress-li li1">
+                    <view class="progress-bg">
+                        <view class="progress-bar"></view>
+                        <view class="img"></view>
+                    </view>
+                    <view class="progress-name">PK活动小组名称:16分</view>
+                </view>
+                <view class="progress-li li2">
+                    <view class="progress-bg">
+                        <view class="progress-bar"></view>
+                        <view class="img"></view>
+                    </view>
+                    <view class="progress-name">PK活动小组名称:15分</view>
+                </view>
+                <view class="progress-li li3">
+                    <view class="progress-bg">
+                        <view class="progress-bar"></view>
+                        <view class="img"></view>
+                    </view>
+                    <view class="progress-name">PK活动小组名称:14分</view>
+                </view>
+                <view class="progress-li li4">
+                    <view class="progress-bg">
+                        <view class="progress-bar"></view>
+                        <view class="img"></view>
+                    </view>
+                    <view class="progress-name">PK活动小组名称:13分</view>
+                </view>
+                <view class="progress-li li5">
+                    <view class="progress-bg">
+                        <view class="progress-bar"></view>
+                        <view class="img"></view>
+                    </view>
+                    <view class="progress-name">PK活动小组名称:12分</view>
+                </view>
+            </view>
+            <view class="home-match-list ranklist" v-show="!rankbar">
+                <view>福跑团第26期</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
+                <view>该账号参与PK活动的名称</view>
             </view>
         </view>
         <view class="home-item">
@@ -34,6 +90,10 @@
         </view>
 
     </view>
+    <view class="home notLoginIn" v-else>
+        <image src="../images/hasnone.png" alt=""></image>
+        <view class="login-btn">立即登录</view>
+    </view>
 </template>
 <script>
     import wepy from '@wepy/core'
@@ -54,12 +114,12 @@
             }
         },
 
-
-
         mixins: [testMixin],
 
         data: {
             name:'lixiao',
+            login:false,
+            rankbar:true,
             markers:[
                 {
                     id:0,
@@ -99,12 +159,74 @@
     page{
         background:#F4F5F9;
     }
+    .notLoginIn{
+        image{
+            width:432rpx;
+            height:355rpx;
+            margin:200rpx auto;
+            display: block;
+        }
+        .login-btn{
+            width:608rpx;
+            height:85rpx;
+            background-color: #fff;
+            -webkit-border-radius:8rpx;
+            -moz-border-radius:8rpx;
+            border-radius:8rpx;
+            color:#363636;
+            font-size:28rpx;
+            text-align: center;
+            line-height:85rpx;
+            margin:0 auto;
+        }
+    }
     .home{
         background:#F4F5F9;
         min-height:100%;
-        padding-top:108rpx;
         padding-bottom:2rpx;
         box-sizing:border-box;
+        .home-title{
+            width:750rpx;
+            height:88rpx;
+            background:#fff;
+            border-radius-left-bottom:10rpx;
+            border-radius-bottom-right:10rpx;
+            margin-bottom:20rpx;
+            .logo{
+                width:43rpx;
+                height:43rpx;
+                border-radius: 50%;
+                color: #fff;
+                background-color: #9966CC;
+                text-align: center;
+                line-height:44rpx;
+                display: inline-block;
+                font-size:20rpx;
+                margin-left:20rpx;
+            }
+            .btn{
+                display: inline-block;
+                float: right;
+                margin-right:40rpx;
+                background-color: #9966CC;
+                color: #fff;
+                line-height:47rpx;
+                height:47rpx;
+                width:150rpx;
+                text-align: center;
+                -webkit-border-radius:30rpx;
+                -moz-border-radius:30rpx;
+                border-radius:30rpx;
+                font-size:26rpx;
+                margin-top:20rpx;
+            }
+            .word{
+                display: inline-block;
+                font-size:26rpx;
+                line-height:88rpx;
+                margin-left:10rpx;
+            }
+        }
         .home-item{
             width: 750rpx;
             padding: 39rpx 0;
@@ -113,6 +235,148 @@
             margin-bottom:20rpx;
             position: relative;
             padding-top:112rpx;
+            .toggle{
+                position: absolute;
+                top:40rpx;
+                right:30rpx;
+                width:28rpx;
+                height:16rpx;
+                background-color:#000;
+                /*background:url(../images/toggle.png) no-repeat center;*/
+                /*-webkit-background-size:28rpx 16rpx;*/
+                /*background-size:28rpx 16rpx;*/
+            }
+            .home-match-list.ranklist{
+                margin:10rpx 20rpx 20rpx;
+                padding:0rpx 30rpx;
+                background-color:#F4F5F9;
+                width:655rpx;
+                height:620rpx;
+                overflow: auto;
+                border-radius:10rpx;
+                view{
+                    font-size:28rpx;
+                    color: #333;
+                    margin:35rpx 0;
+                }
+            }
+            .home-match-list.rankbar{
+                over-flow:hidden;
+                height:500rpx;
+                &.showmore{
+                    height:auto;
+                 }
+                .progress-li{
+                    padding-left:40rpx;
+                    &.li1{
+                        .progress-bg{
+                            background: -webkit-linear-gradient(left,rgba(254,19,71,0.1),rgba(255,100,135,0.1)); /* Safari 5.1 - 6.0 */
+                            background: -o-linear-gradient(right,rgba(254,19,71,0.1),rgba(255,100,135,0.1)); /* Opera 11.1 - 12.0 */
+                            background: -moz-linear-gradient(right,rgba(254,19,71,0.1),rgba(255,100,135,0.1)); /* Firefox 3.6 - 15 */
+                            background: linear-gradient(to right,rgba(254,19,71,0.1),rgba(255,100,135,0.1)); /* 标准的语法 */
+                            .progress-bar{
+                                width:600rpx;
+                                background: -webkit-linear-gradient(left, #fe1347,#ff6487); /* Safari 5.1 - 6.0 */
+                                background: -o-linear-gradient(right, #fe1347,#ff6487); /* Opera 11.1 - 12.0 */
+                                background: -moz-linear-gradient(right, #fe1347,#ff6487); /* Firefox 3.6 - 15 */
+                                background: linear-gradient(to right, #fe1347,#ff6487); /* 标准的语法 */
+                            }
+                        }
+                    }
+                    &.li2{
+                        .progress-bg{
+                            background: -webkit-linear-gradient(left,rgba(228,30,10,0.1),rgba(255,100,79,0.1)); /* Safari 5.1 - 6.0 */
+                            background: -o-linear-gradient(right,rgba(228,30,10,0.1),rgba(255,100,79,0.1)); /* Opera 11.1 - 12.0 */
+                            background: -moz-linear-gradient(right,rgba(228,30,10,0.1),rgba(255,100,79,0.1)); /* Firefox 3.6 - 15 */
+                            background: linear-gradient(to right,rgba(228,30,10,0.1),rgba(255,100,79,0.1)); /* 标准的语法 */
+                            .progress-bar{
+                                width:500rpx;
+                                background: -webkit-linear-gradient(left, #e41e0a,#ff644f); /* Safari 5.1 - 6.0 */
+                                background: -o-linear-gradient(right,#e41e0a,#ff644f); /* Opera 11.1 - 12.0 */
+                                background: -moz-linear-gradient(right,#e41e0a,#ff644f); /* Firefox 3.6 - 15 */
+                                background: linear-gradient(to right,#e41e0a,#ff644f); /* 标准的语法 */
+                            }
+                        }
+                    }
+                    &.li3{
+                        .progress-bg{
+                            background: -webkit-linear-gradient(left,rgba(255,96,58,0.1),rgba(255,153,69,0.1)); /* Safari 5.1 - 6.0 */
+                            background: -o-linear-gradient(right,rgba(255,96,58,0.1),rgba(255,153,69,0.1)); /* Opera 11.1 - 12.0 */
+                            background: -moz-linear-gradient(right,rgba(255,96,58,0.1),rgba(255,153,69,0.1)); /* Firefox 3.6 - 15 */
+                            background: linear-gradient(to right,rgba(255,96,58,0.1),rgba(255,153,69,0.1)); /* 标准的语法 */
+                            .progress-bar{
+                                width:400rpx;
+                                background: -webkit-linear-gradient(left, #ff603a,#ff9945); /* Safari 5.1 - 6.0 */
+                                background: -o-linear-gradient(right,#ff603a,#ff9945); /* Opera 11.1 - 12.0 */
+                                background: -moz-linear-gradient(right,#ff603a,#ff9945); /* Firefox 3.6 - 15 */
+                                background: linear-gradient(to right,#ff603a,#ff9945); /* 标准的语法 */
+                            }
+                        }
+                    }
+                    &.li4{
+                        .progress-bg{
+                            background: -webkit-linear-gradient(left,rgba(254,152,56,0.1),rgba(255,224,69,0.1)); /* Safari 5.1 - 6.0 */
+                            background: -o-linear-gradient(right,rgba(254,152,56,0.1),rgba(255,224,69,0.1)); /* Opera 11.1 - 12.0 */
+                            background: -moz-linear-gradient(right,rgba(254,152,56,0.1),rgba(255,224,69,0.1)); /* Firefox 3.6 - 15 */
+                            background: linear-gradient(to right,rgba(254,152,56,0.1),rgba(255,224,69,0.1)); /* 标准的语法 */
+                            .progress-bar{
+                                width:300rpx;
+                                background: -webkit-linear-gradient(left,#FE9838,#FFE045); /* Safari 5.1 - 6.0 */
+                                background: -o-linear-gradient(right,#FE9838,#FFE045); /* Opera 11.1 - 12.0 */
+                                background: -moz-linear-gradient(right,#FE9838,#FFE045); /* Firefox 3.6 - 15 */
+                                background: linear-gradient(to right,#FE9838,#FFE045); /* 标准的语法 */
+                            }
+                        }
+                    }
+                    &.li5{
+                        .progress-bg{
+                            background: -webkit-linear-gradient(left,rgba(228,77,38,0.1),rgba(241,101,41,0.1)); /* Safari 5.1 - 6.0 */
+                            background: -o-linear-gradient(right,rgba(228,77,38,0.1),rgba(241,101,41,0.1)); /* Opera 11.1 - 12.0 */
+                            background: -moz-linear-gradient(right,rgba(228,77,38,0.1),rgba(241,101,41,0.1)); /* Firefox 3.6 - 15 */
+                            background: linear-gradient(to right,rgba(228,77,38,0.1),rgba(241,101,41,0.1)); /* 标准的语法 */
+                            .progress-bar{
+                                width:200rpx;
+                                background: -webkit-linear-gradient(left,#E44D26,#F16529); /* Safari 5.1 - 6.0 */
+                                background: -o-linear-gradient(right,#E44D26,#F16529); /* Opera 11.1 - 12.0 */
+                                background: -moz-linear-gradient(right,#E44D26,#F16529); /* Firefox 3.6 - 15 */
+                                background: linear-gradient(to right,#E44D26,#F16529); /* 标准的语法 */
+                            }
+                        }
+                    }
+                    .progress-bg{
+                        position: relative;
+                        width:670rpx;
+                        height: 40rpx;
+                        background:#fefefe;
+                        border-radius:50rpx;
+                        .progress-bar{
+                            height:40rpx;
+                            position: absolute;
+                            left:0;
+                            top:0;
+                            border-radius:50rpx;
+                        }
+                        .img{
+                            width:40rpx;
+                            height:40rpx;
+                            -webkit-border-radius:50%;
+                            -moz-border-radius:50%;
+                            border-radius:50%;
+                            position: absolute;
+                            left:0;
+                            top:0;
+                            background-color: #000;
+                        }
+                    }
+                    .progress-name{
+                        font-size:24rpx;
+                        color:#B4B4B4;
+                        font-weight:900;
+                        margin:15rpx 2rpx;
+                        display: inline-block;
+                    }
+                }
+            }
             .home-item-title{
                 font-size:32rpx;
                 font-weight: bold;

@@ -39,9 +39,8 @@ wepy.app({
 <config>
 {
     pages: [
-
-      'pages/login',
       'pages/home-index',
+      'pages/login',
       'pages/rundetail'
     ],
     window: {
