@@ -12,36 +12,33 @@
             <view class="detail-list">
                 <view class="detail-list-item">
                     <text>活动名称</text>
-                    <text>奥森公园月抛</text>
+                    <text>{{rundetials.title}}</text>
                 </view>
                 <view class="detail-list-item">
-                    <text>活动名称</text>
-                    <text>奥森公园月抛</text>
+                    <text>活动时间</text>
+                    <text>{{rundetials.start}}</text>
                 </view>
                 <view class="detail-list-item">
-                    <text>活动名称</text>
-                    <text>奥森公园月抛</text>
+                    <text>活动时长</text>
+                    <text>{{rundetials.run_time}}</text>
                 </view>
                 <view class="detail-list-item">
-                    <text>活动名称</text>
-                    <text>奥森公园月抛</text>
+                    <text>活动区间最快配速</text>
+                    <text>{{rundetials.pace_max}}</text>
                 </view>
                 <view class="detail-list-item">
-                    <text>活动名称</text>
-                    <text>奥森公园月抛</text>
+                    <text>活动区间最慢配速</text>
+                    <text>{{rundetials.pace_min}}</text>
+                </view>
+                <view class="detail-list-item">
+                    <text>约跑最小公里数</text>
+                    <text>{{rundetials.min_dist}}</text>
                 </view>
             </view>
         </view>
         <view class="section">
             <view class="s-title">活动内容</view>
-            <view class="detail-text">
-                北京丰台区总部基地18区25号楼阿达阿
-                达王企鹅群翁群翁，群无驱蚊器二阿萨达阿
-                达奥术大师大所大 阿萨达阿达 阿萨达 阿萨
-                北京丰台区总部基地18区25号楼阿达阿
-                达王企鹅群翁群翁，群无驱蚊器二阿萨达阿
-                达奥术大师大所大 阿萨达阿达 阿萨达 阿萨
-            </view>
+            <view class="detail-text">{{rundetials.introduction}} </view>
         </view>
         <view class="section">
             <view class="s-title">提示</view>
@@ -67,21 +64,9 @@
         <view class="section">
             <view class="s-title">已报名人员</view>
             <view class="ready-person">
-                <view class="ready-person-item">
-                    <image mode="aspectFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567919241294&di=405aaa21db3b7a70a840b2b691c1dc14&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201405%2F27%2F20140527174544_K8Zsr.thumb.600_0.jpeg"></image>
-                    <text>用户昵称用户昵称用户昵称</text>
-                </view>
-                <view class="ready-person-item">
-                    <image mode="aspectFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567919241294&di=405aaa21db3b7a70a840b2b691c1dc14&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201405%2F27%2F20140527174544_K8Zsr.thumb.600_0.jpeg"></image>
-                    <text>用户昵称用户昵称用户昵称</text>
-                </view>
-                <view class="ready-person-item">
-                    <image mode="aspectFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567919241294&di=405aaa21db3b7a70a840b2b691c1dc14&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201405%2F27%2F20140527174544_K8Zsr.thumb.600_0.jpeg"></image>
-                    <text>用户昵称用户昵称用户昵称</text>
-                </view>
-                <view class="ready-person-item">
-                    <image mode="aspectFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567919241294&di=405aaa21db3b7a70a840b2b691c1dc14&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201405%2F27%2F20140527174544_K8Zsr.thumb.600_0.jpeg"></image>
-                    <text>用户昵称用户昵称用户昵称</text>
+                <view class="ready-person-item" v-for="item in runnerDet">
+                    <image mode="aspectFill" :src="item.user_avatar"></image>
+                    <text>{{item.user_name}}</text>
                 </view>
             </view>
         </view>
@@ -97,7 +82,19 @@
     import eventHub from '../common/eventHub';
     import store from '../store';
     import testMixin from '../mixins/test'
-
+    import request from '../common/request';
+    const api = {
+        base(params){
+            return request({
+                url: 'https://api.epk.kingsmith.com.cn/V0.2/',
+                data: params,
+                method:'post',
+                header: {
+                    'content-type': 'application/json' // 默认值
+                }
+            })
+        }
+    }
     wepy.page({
         store,
         config: {
@@ -117,6 +114,12 @@
 
         data: {
             name:'lixiao',
+            ksid:'40036',
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkua2luZ3NtaXRoLmNvbS5jbiIsImtzaWQiOiIxMDAiLCJpYXQiOjE0NTIwNzI3NTUsImV4cCI6MTQ1MjY3NzU1NX0.F7hSClqAfG9jqP4V02AzH3bk4L1HFuyUjuMV50MWuJU",
+            matchid:1281,
+            run_id:1281,
+            rundetials:[],
+            runnerDet:[],
             markers:[
                 {
                     id:0,
@@ -141,13 +144,25 @@
         },
 
         methods:{
-            test(e){
-               console.log(e)
+            init(){
+                api.base({
+                    "service": "run.getRunDetail",
+                    "ksid": this.ksid,
+                    "token": this.token,
+                    "match_id":this.matchid,
+                    "run_id":this.run_id,
+                }).then(res=>{
+                    if(res.data.data.code==0){
+                        this.rundetials = res.data.data.info.run_list;
+                        this.runnerDet = res.data.data.info.run_user;
+                    console.log(res)
+                    }
+                })
             }
         },
 
         created () {
-
+            this.init();
 
         }
     });

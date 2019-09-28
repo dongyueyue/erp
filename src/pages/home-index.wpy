@@ -1,125 +1,93 @@
-<wxs module="m1" lang="babel">
-
+<wxs module="tempFun" lang="babel">
+    const typeFilter = (type) => {
+        if(type==1){
+            return '报名中';
+        }else if(type == 2){
+            return '进行中';
+        }else if(type==3){
+            return '已结束';
+        }else{
+            return '未开始'
+        }
+    }
+    module.exports.typeFilter = typeFilter;
 </wxs>
 <template>
-    <view class="home" v-if="login">
-        <view class="home-title">
-            <view class="logo">EPK</view>
-            <text class="word">进入App与跑友一起参与PK</text>
-            <view class="btn">立刻打开</view>
-        </view>
-        <view class="home-item">
-            <view class="home-item-title">福跑团第26期</view>
-            <view class="toggle" @click="rankbar=!rankbar"></view>
-            <view class="home-match-list rankbar" v-show="rankbar">
-                <view class="progress-li li1">
-                    <view class="progress-bg">
-                        <view class="progress-bar"></view>
-                        <view class="img"></view>
-                    </view>
-                    <view class="progress-name">PK活动小组名称:16分</view>
-                </view>
-                <view class="progress-li li2">
-                    <view class="progress-bg">
-                        <view class="progress-bar"></view>
-                        <view class="img"></view>
-                    </view>
-                    <view class="progress-name">PK活动小组名称:15分</view>
-                </view>
-                <view class="progress-li li3">
-                    <view class="progress-bg">
-                        <view class="progress-bar"></view>
-                        <view class="img"></view>
-                    </view>
-                    <view class="progress-name">PK活动小组名称:14分</view>
-                </view>
-                <view class="progress-li li4">
-                    <view class="progress-bg">
-                        <view class="progress-bar"></view>
-                        <view class="img"></view>
-                    </view>
-                    <view class="progress-name">PK活动小组名称:13分</view>
-                </view>
-                <view class="progress-li li5">
-                    <view class="progress-bg">
-                        <view class="progress-bar"></view>
-                        <view class="img"></view>
-                    </view>
-                    <view class="progress-name">PK活动小组名称:12分</view>
-                </view>
+    <pageWrap>
+        <view class="home" v-if="login">
+            <view class="home-title">
+                <view class="logo">EPK</view>
+                <text class="word">进入App与跑友一起参与PK</text>
+                <view class="btn">立刻打开</view>
             </view>
-            <view class="home-match-list ranklist" v-show="!rankbar">
-                <view>福跑团第26期</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-                <view>该账号参与PK活动的名称</view>
-            </view>
-        </view>
-        <view class="home-item">
-            <view class="home-item-title">约跑</view>
-            <view class="home-active-list">
-                <view class="home-active-list-item" style="background-image: url('https://f11.baidu.com/it/u=3242928727,3287993420&fm=72')">
-                    <text class="home-active-list-item-title">约跑活动名称</text>
-                    <text class="home-active-list-item-msg">参与人数: 1238人</text>
-                    <text class="home-active-list-item-msg">2019.02.22 06:30</text>
-                    <text class="status">报名中</text>
+            <view class="home-item">
+                <view class="home-item-title">{{homeData.title}}</view>
+                <view class="toggle" @click="getHistory"></view>
+                <view class="home-match-list rankbar" v-show="rankbar">
+                    <view  v-for="(item,index) in homeData.list" class="progress-li li1">
+                        <view class="progress-bg">
+                            <view class="progress-bar" style="width: {{item.score*100/homeData.total}}%"></view>
+                            <view class="img" style="background-image: url('{{item.avatar}}')"></view>
+                        </view>
+                        <view class="progress-name">{{item.name}}</view>
+                    </view>
                 </view>
-                <view class="home-active-list-item" style="background-image: url('https://f11.baidu.com/it/u=3242928727,3287993420&fm=72')">
-                    <text class="home-active-list-item-title">约跑活动名称</text>
-                    <text class="home-active-list-item-msg">参与人数: 1238人</text>
-                    <text class="home-active-list-item-msg">2019.02.22 06:30</text>
-                    <text class="status">报名中</text>
-                </view>
-                <view class="home-active-list-item" style="background-image: url('https://f11.baidu.com/it/u=3242928727,3287993420&fm=72')">
-                    <text class="home-active-list-item-title">约跑活动名称</text>
-                    <text class="home-active-list-item-msg">参与人数: 1238人</text>
-                    <text class="home-active-list-item-msg">2019.02.22 06:30</text>
-                    <text class="status">报名中</text>
-                </view>
-            </view>
-        </view>
+                <view class="home-match-list ranklist" v-show="!rankbar">
+                    <view v-for="(item,index) in homeData.history" @click="matchDetail(item.matchid)">{{item.title}}</view>
 
-    </view>
-    <view class="home notLoginIn" v-else>
-        <image src="../images/hasnone.png" alt=""></image>
-        <view class="login-btn">立即登录</view>
-    </view>
+
+                </view>
+            </view>
+            <view class="home-item" v-if="homeData.yueList&&homeData.yueList.length>0">
+                <view class="home-item-title">约跑</view>
+                <view class="home-active-list">
+                    <view v-for="(item,index) in homeData.yueList" class="home-active-list-item" style="background-image: url({{item.avatar}})">
+                        <text class="home-active-list-item-title">{{item.title}}</text>
+                        <text class="home-active-list-item-msg">参与人数: {{item.user}}人</text>
+                        <text class="home-active-list-item-msg">{{item.start}}</text>
+                        <text class="status">{{tempFun.typeFilter(item.type)}}</text>
+                    </view>
+                </view>
+            </view>
+            <view class="home-item" v-else>
+                <view class="home-item-title">暂无活动</view>
+                <view class="home-yuepao-no-data"></view>
+            </view>
+
+        </view>
+        <view class="home notLoginIn" v-else>
+            <image src="../images/hasnone.png" alt=""></image>
+            <view class="login-btn">立即登录</view>
+        </view>
+    </pageWrap>
 </template>
 <script>
     import wepy from '@wepy/core'
     import eventHub from '../common/eventHub';
-//    import store from '../store';
+    import request from '../common/request';
+    import store from '../store';
     import testMixin from '../mixins/test';
+    const api = request
     wepy.page({
-//        store,
+        store,
         config: {
             navigationBarTitleText: 'test',
 
         },
-
         hooks: {
             // Page 级别 hook, 只对当前 Page 的 setData 生效。
             'before-setData': function (dirty) {
 
             }
         },
-
         mixins: [testMixin],
 
         data: {
             name:'lixiao',
-            login:false,
+            login:true,
             rankbar:true,
+            ksid:'40036',
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkua2luZ3NtaXRoLmNvbS5jbiIsImtzaWQiOiIxMDAiLCJpYXQiOjE0NTIwNzI3NTUsImV4cCI6MTQ1MjY3NzU1NX0.F7hSClqAfG9jqP4V02AzH3bk4L1HFuyUjuMV50MWuJU",
             markers:[
                 {
                     id:0,
@@ -133,24 +101,83 @@
                         fontSize:'22'
                     }
                 }
-            ]
+            ],
+            homeData:{
+                list:[],
+                total:0,
+                title:'',
+                history:[],
+                yueList:null
+            }
+//            curMatchList:[],
+//            curMatch:{}
         },
 
         computed: {
-//      ...mapState([ 'counter' ]),
-//      testcomputed () {
-//        return 'computed - ' + this.mynum;
-//      }
-        },
 
+        },
         methods:{
-            test(e){
-                console.log(e)
+
+            initHomeData(data){
+//                this.homeData.list.splice(0, this.homeData.list.length,...data.info.list )
+                this.homeData.list = data.info.list
+                let total = 0
+                this.homeData.list.forEach(item=>total+=Number(item.score))
+                this.homeData.total = total;
+                this.homeData.title = data.info.match_info.title
+            },
+            matchDetail(matchid){
+                request.api({
+                    "service": "find.getDynamic",
+                    "ksid": this.ksid,
+                    "token": this.token,
+                    "match_id":matchid
+                }).then(res=>{
+                    if(res.data.data.code==0){
+                        this.initHomeData(res.data.data)
+                        this.rankbar = true;
+                        this.getYue(res.data.data.info.match_info.team_id,res.data.data.info.match_info.matchid)
+                    }
+                })
+            },
+            getYue(teamId,matchId){
+                request.api({
+                    "service": "run.getRunList",
+                    "ksid": this.ksid,
+                    "team_id": "369",
+                    "page": "1",
+                    "token": this.token
+                }).then(res=>{
+                    if(res.data.data.code==0){
+                        this.homeData.yueList = res.data.data.info
+                    }
+                })
+            },
+            getHistory(){
+                this.rankbar = !this.rankbar
+                if (this.homeData.history.length > 0) {
+                    return;
+                }
+                if (!this.rankbar) {
+                    request.api(
+                            {
+                                "service": "team.getMyMatchList",
+                                "ksid": this.ksid,
+                                "token": this.token
+                            }
+                    ).then(res => {
+                        if(res.data.data.code == 0){
+                            this.homeData.history = res.data.data.info.list
+                        }
+                    })
+                }
             }
         },
-
         created () {
+            this.matchDetail()
 
+        },
+        components:{
 
         }
     });
@@ -179,6 +206,13 @@
             line-height:85rpx;
             margin:0 auto;
         }
+    }
+    .home-yuepao-no-data{
+        width: 640rpx;
+        height: 200rpx;
+        background: #fff;
+        border-radius:30rpx;
+        margin:0 auto;
     }
     .home{
         background:#F4F5F9;
@@ -268,14 +302,14 @@
                  }
                 .progress-li{
                     padding-left:40rpx;
-                    &.li1{
+                    &:nth-child(n){
                         .progress-bg{
                             background: -webkit-linear-gradient(left,rgba(254,19,71,0.1),rgba(255,100,135,0.1)); /* Safari 5.1 - 6.0 */
                             background: -o-linear-gradient(right,rgba(254,19,71,0.1),rgba(255,100,135,0.1)); /* Opera 11.1 - 12.0 */
                             background: -moz-linear-gradient(right,rgba(254,19,71,0.1),rgba(255,100,135,0.1)); /* Firefox 3.6 - 15 */
                             background: linear-gradient(to right,rgba(254,19,71,0.1),rgba(255,100,135,0.1)); /* 标准的语法 */
                             .progress-bar{
-                                width:600rpx;
+
                                 background: -webkit-linear-gradient(left, #fe1347,#ff6487); /* Safari 5.1 - 6.0 */
                                 background: -o-linear-gradient(right, #fe1347,#ff6487); /* Opera 11.1 - 12.0 */
                                 background: -moz-linear-gradient(right, #fe1347,#ff6487); /* Firefox 3.6 - 15 */
@@ -283,14 +317,14 @@
                             }
                         }
                     }
-                    &.li2{
+                    &:nth-child(2n){
                         .progress-bg{
                             background: -webkit-linear-gradient(left,rgba(228,30,10,0.1),rgba(255,100,79,0.1)); /* Safari 5.1 - 6.0 */
                             background: -o-linear-gradient(right,rgba(228,30,10,0.1),rgba(255,100,79,0.1)); /* Opera 11.1 - 12.0 */
                             background: -moz-linear-gradient(right,rgba(228,30,10,0.1),rgba(255,100,79,0.1)); /* Firefox 3.6 - 15 */
                             background: linear-gradient(to right,rgba(228,30,10,0.1),rgba(255,100,79,0.1)); /* 标准的语法 */
                             .progress-bar{
-                                width:500rpx;
+
                                 background: -webkit-linear-gradient(left, #e41e0a,#ff644f); /* Safari 5.1 - 6.0 */
                                 background: -o-linear-gradient(right,#e41e0a,#ff644f); /* Opera 11.1 - 12.0 */
                                 background: -moz-linear-gradient(right,#e41e0a,#ff644f); /* Firefox 3.6 - 15 */
@@ -298,14 +332,14 @@
                             }
                         }
                     }
-                    &.li3{
+                    &:nth-child(3n){
                         .progress-bg{
                             background: -webkit-linear-gradient(left,rgba(255,96,58,0.1),rgba(255,153,69,0.1)); /* Safari 5.1 - 6.0 */
                             background: -o-linear-gradient(right,rgba(255,96,58,0.1),rgba(255,153,69,0.1)); /* Opera 11.1 - 12.0 */
                             background: -moz-linear-gradient(right,rgba(255,96,58,0.1),rgba(255,153,69,0.1)); /* Firefox 3.6 - 15 */
                             background: linear-gradient(to right,rgba(255,96,58,0.1),rgba(255,153,69,0.1)); /* 标准的语法 */
                             .progress-bar{
-                                width:400rpx;
+
                                 background: -webkit-linear-gradient(left, #ff603a,#ff9945); /* Safari 5.1 - 6.0 */
                                 background: -o-linear-gradient(right,#ff603a,#ff9945); /* Opera 11.1 - 12.0 */
                                 background: -moz-linear-gradient(right,#ff603a,#ff9945); /* Firefox 3.6 - 15 */
@@ -313,14 +347,14 @@
                             }
                         }
                     }
-                    &.li4{
+                    &:nth-child(4n){
                         .progress-bg{
                             background: -webkit-linear-gradient(left,rgba(254,152,56,0.1),rgba(255,224,69,0.1)); /* Safari 5.1 - 6.0 */
                             background: -o-linear-gradient(right,rgba(254,152,56,0.1),rgba(255,224,69,0.1)); /* Opera 11.1 - 12.0 */
                             background: -moz-linear-gradient(right,rgba(254,152,56,0.1),rgba(255,224,69,0.1)); /* Firefox 3.6 - 15 */
                             background: linear-gradient(to right,rgba(254,152,56,0.1),rgba(255,224,69,0.1)); /* 标准的语法 */
                             .progress-bar{
-                                width:300rpx;
+
                                 background: -webkit-linear-gradient(left,#FE9838,#FFE045); /* Safari 5.1 - 6.0 */
                                 background: -o-linear-gradient(right,#FE9838,#FFE045); /* Opera 11.1 - 12.0 */
                                 background: -moz-linear-gradient(right,#FE9838,#FFE045); /* Firefox 3.6 - 15 */
@@ -328,14 +362,14 @@
                             }
                         }
                     }
-                    &.li5{
+                    &:nth-child(5n){
                         .progress-bg{
                             background: -webkit-linear-gradient(left,rgba(228,77,38,0.1),rgba(241,101,41,0.1)); /* Safari 5.1 - 6.0 */
                             background: -o-linear-gradient(right,rgba(228,77,38,0.1),rgba(241,101,41,0.1)); /* Opera 11.1 - 12.0 */
                             background: -moz-linear-gradient(right,rgba(228,77,38,0.1),rgba(241,101,41,0.1)); /* Firefox 3.6 - 15 */
                             background: linear-gradient(to right,rgba(228,77,38,0.1),rgba(241,101,41,0.1)); /* 标准的语法 */
                             .progress-bar{
-                                width:200rpx;
+
                                 background: -webkit-linear-gradient(left,#E44D26,#F16529); /* Safari 5.1 - 6.0 */
                                 background: -o-linear-gradient(right,#E44D26,#F16529); /* Opera 11.1 - 12.0 */
                                 background: -moz-linear-gradient(right,#E44D26,#F16529); /* Firefox 3.6 - 15 */
@@ -365,7 +399,8 @@
                             position: absolute;
                             left:0;
                             top:0;
-                            background-color: #000;
+                            background: no-repeat center;
+                            background-size:cover;
                         }
                     }
                     .progress-name{
@@ -445,29 +480,8 @@
 <config>
     {
         "usingComponents": {
-            "tabbar": "../components/home-tab-bar"
-        },
-        "tabBar": {
-            "custom": false,
-            "color": "#7A7E83",
-            "selectedColor": "#3cc51f",
-            "borderStyle": "black",
-            "backgroundColor": "#ffffff",
-            "list": [
-            {
-            "pagePath": "pages/login",
-            "iconPath": "",
-            "selectedIconPath": "",
-            "text": "组件"
-            },
-            {
-            "pagePath": "pages/login",
-            "iconPath": "",
-            "selectedIconPath": "",
-            "text": "接口"
-            }
-            ]
-        },
+            "pageWrap": "../components/pageWrap"
+        }
     }
 </config>
 

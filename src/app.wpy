@@ -2,6 +2,8 @@
 page{
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
+  padding-top: 1rpx;
 }
 </style>
 
@@ -9,27 +11,22 @@ page{
 import wepy from '@wepy/core';
 import eventHub from './common/eventHub';
 import vuex from '@wepy/x';
-
 wepy.use(vuex);
-
 
 wepy.app({
   hooks: {
     // App 级别 hook，对整个 App 生效
     // 同时存在 Page hook 和 App hook 时，优先执行 Page hook，返回值再交由 App hook 处
     'before-setData': function (dirty) {
-      console.log('setData dirty: ', dirty);
+
       return dirty;
     }
   },
   globalData: {
-    userInfo: null
+    userInfo: {}
   },
-
-  onLaunch() {
-
+  onLaunch(){
   },
-
   methods: {
 
 
@@ -39,10 +36,35 @@ wepy.app({
 <config>
 {
     pages: [
-      'pages/home-index',
-      'pages/login',
-      'pages/rundetail'
+        'pages/home-user',
+        'pages/home-index',
+        'pages/team-detail',
+        'pages/ranking',
+        'pages/register',
+        'pages/login',
+        'pages/rundetail',
     ],
+    "tabBar": {
+        "custom": false,
+        "color": "#BBBBBB",
+        "selectedColor": "#9966CC",
+        "borderStyle": "white",
+        "backgroundColor": "",
+        "list": [
+            {
+                "pagePath": "pages/home-index",
+                "iconPath": "",
+                "selectedIconPath": "",
+                "text": "活动"
+            },
+            {
+                "pagePath": "pages/home-user",
+                "iconPath": "",
+                "selectedIconPath": "",
+                "text": "我的"
+            }
+        ]
+    },
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',

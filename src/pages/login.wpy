@@ -2,41 +2,42 @@
 
 </wxs>
 <template>
-
-  <view class="login">
-    <view v-show="type==1">
-      <text class="title">检测到当前微信已在EPK注册，确认使用该账号？</text>
-      <view>
-        <button open-type="getUserInfo">11</button>
-        <view class="protrait">
-          <text>用户昵称</text>
+    <view class="login">
+      <!--<view v-show="type==1">-->
+        <!--<text class="title">检测到当前微信已在EPK注册，确认使用该账号？</text>-->
+        <!--<view>-->
+          <!--<view class="protrait">-->
+            <!--<text>用户昵称</text>-->
+          <!--</view>-->
+        <!--</view>-->
+      <!--</view>-->
+      <view v-show="loginType.UNLOGIN == auth.loginType">
+        <view class="icon"></view>
+        <view class="input-item">
+          <input placeholder="请输入手机号" placeholder-style="color:rgba(237,237,237,.8);">
         </view>
+        <view class="input-item">
+          <input type="password" placeholder="请输入密码" placeholder-style="color:rgba(237,237,237,.8);">
+        </view>
+        <view class="turn-link">
+          <text>忘记密码</text>
+          <text class="line">|</text>
+          <text @click="register">用户注册</text>
+        </view>
+        <view class="l-btn">登录</view>
       </view>
-    </view>
-    <view v-show="type==2">
-      <view class="icon"></view>
-      <view class="input-item">
-        <input placeholder="请输入手机号" placeholder-style="color:rgba(237,237,237,.8);">
-      </view>
-      <view class="input-item">
-        <input type="password" placeholder="请输入密码" placeholder-style="color:rgba(237,237,237,.8);">
-      </view>
-      <view class="turn-link">
-        <text>忘记密码</text>
-        <text class="line">|</text>
-        <text>用户注册</text>
-      </view>
-      <view class="l-btn">登录</view>
+
     </view>
 
-  </view>
 </template>
 <script>
   import wepy from '@wepy/core'
   import eventHub from '../common/eventHub';
   import store from '../store';
-  import testMixin from '../mixins/test'
-
+  import testMixin from '../mixins/test';
+  import { mapState } from '@wepy/x';
+  import authConfig from '../store/mod/authConfig';
+  const loginType = authConfig.loginType
   wepy.page({
     store,
     config: {
@@ -50,28 +51,26 @@
       }
     },
 
-
+    computed:{
+      ...mapState(['auth'])
+    },
 
     mixins: [testMixin],
 
     data: {
-      name:'lixiao',
-      type:1,
+      loginType
     },
 
-    computed: {
-      user(){
-        return this.$store.state.auth.user
+
+    methods:{
+      register(){
+        wx.navigateTo({
+          url:'register'
+        })
       }
     },
 
-    methods:{
-
-    },
-
     created () {
-      store.dispatch('initUser');
-
 
     }
   });
@@ -143,4 +142,12 @@
     }
   }
 </style>
+
+<config>
+  {
+    "usingComponents": {
+      "pageWrap": "../components/pageWrap"
+    }
+  }
+</config>
 

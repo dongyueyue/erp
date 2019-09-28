@@ -2,18 +2,33 @@
 
 </wxs>
 <template>
-    <view class="home-user">
+    <pageWrap>
+        <view class="home-user">
 
-
-    </view>
+            <view class="logined" v-if="auth.loginType==loginType.LOGIN">
+                <view class="user-card">
+                    <image src="{{auth.user.avatar}}"></image>
+                    <view class="text">{{auth.user.name}}</view>
+                </view>
+                <view class="btn">退出登录</view>
+            </view>
+            <view class="no-data" v-else>
+                <image src="../images/hasnone.png"></image>
+                <view class="msg">您还未登哦！登录后体验更多功能</view>
+                <view class="btn" @click="toLogin">登录/注册</view>
+            </view>
+        </view>
+    </pageWrap>
 </template>
 <script>
     import wepy from '@wepy/core'
-    import eventHub from '../common/eventHub';
-    //    import store from '../store';
+    import { mapState } from '@wepy/x';
+    import store from '../store';
     import testMixin from '../mixins/test';
+    import authConfig from '../store/mod/authConfig';
+    const loginType = authConfig.loginType
     wepy.page({
-//        store,
+        store,
         config: {
             navigationBarTitleText: 'test',
 
@@ -25,77 +40,110 @@
 
             }
         },
-
-
-
+        computed:{
+            ...mapState(['auth'])
+        },
         mixins: [testMixin],
 
         data: {
-            name:'lixiao',
-            markers:[
-                {
-                    id:0,
-                    latitude: 23.099994,
-                    longitude: 113.324520,
-                    title:'haha',
-                    iconPath:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567919241294&di=405aaa21db3b7a70a840b2b691c1dc14&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201405%2F27%2F20140527174544_K8Zsr.thumb.600_0.jpeg',
-                    callout:{
-                        content:'haha',
-                        color:'red',
-                        fontSize:'22'
-                    }
-                }
-            ]
+            loginType
         },
-
-        computed: {
-//      ...mapState([ 'counter' ]),
-//      testcomputed () {
-//        return 'computed - ' + this.mynum;
-//      }
-        },
-
         methods:{
-            test(e){
-                console.log(e)
+            toLogin(){
+                wx.navigateTo({
+                    url:'login'
+                })
             }
         },
-
         created () {
-
-
         }
     });
 </script>
 <style lang="less">
-
+    page{
+        background: #F4F5F9;
+    }
+    .home-user{
+        position:relative;
+        width:100%;
+        height:100%;
+        box-sizing:border-box;
+        padding-top:1rpx;
+        .no-data{
+            margin:250rpx auto 0;
+            image{
+                display: block;
+                width: 432rpx;
+                height: 355rpx;
+                margin:0 auto;
+            }
+            .msg{
+                color:#333;
+                text-align: center;
+                font-size: 28rpx;
+                font-weight: bold;
+                margin: 63rpx 0 127rpx;
+            }
+        }
+        .logined{
+            position: relative;
+            width:100%;
+            height:100%;
+            box-sizing: border-box;
+            padding-top:1rpx;
+            .btn{
+                position: absolute;
+                bottom: 260rpx;
+                left:70rpx;
+            }
+        }
+        .user-card{
+            width: 699rpx;
+            padding: 42rpx 39rpx;
+            display: flex;
+            box-sizing:border-box;
+            margin:0 auto;
+            background:#fff;
+            border-radius:5rpx;
+            display:flex;
+            margin-top: 105rpx;
+            image{
+                width: 106rpx;
+                height: 106rpx;
+                border-radius: 100%;
+                background: #000;
+                margin-right: 38rpx;
+            }
+            .text{
+                font-size: 30rpx;
+                color: #000;
+                width: 500rpx;
+                font-weight: bold;
+                display: inline-flex;
+                align-items: center;
+                ;
+            }
+        }
+        .btn{
+            width: 608rpx;
+            height: 85rpx;
+            border-radius:8rpx;
+            color:#363636;
+            font-size:28rpx;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            margin:0rpx auto 0;
+        }
+    }
 </style>
 <config>
     {
-    "usingComponents": {
-    "tabbar": "../components/home-tab-bar"
-    },
-    "tabBar": {
-    "custom": false,
-    "color": "#7A7E83",
-    "selectedColor": "#3cc51f",
-    "borderStyle": "black",
-    "backgroundColor": "#ffffff",
-    "list": [
-    {
-    "pagePath": "pages/login",
-    "iconPath": "",
-    "selectedIconPath": "",
-    "text": "组件"
-    },
-    {
-    "pagePath": "pages/login",
-    "iconPath": "",
-    "selectedIconPath": "",
-    "text": "接口"
-    }
-    ]
-    },
+        "usingComponents": {
+            "pageWrap": "../components/pageWrap"
+        }
     }
 </config>
 

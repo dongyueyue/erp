@@ -1,0 +1,231 @@
+<wxs module="m1" lang="babel">
+
+</wxs>
+<template>
+    <view class="ranking">
+        <view class="banner" >
+            <view class="title">大肚年,小蛮腰</view>
+            <view class="time">2019=2019</view>
+            <view class="desc">进行中 积分赛</view>
+        </view>
+        <view class="rank-list">
+            <view class="rank-card">
+                <view class="index">1</view>
+                <image class="photo"></image>
+                <view class="details">
+                    <text class="group-name">小组2</text>
+                    <text class="num">4人</text>
+                </view>
+                <view class="score">288.53分</view>
+            </view>
+            <view class="rank-card">
+                <view class="index">1</view>
+                <image class="photo"></image>
+                <view class="details">
+                    <text class="group-name">小组2</text>
+                    <text class="num">4人</text>
+                </view>
+                <view class="score">288.53分</view>
+            </view>
+            <view class="rank-card">
+                <view class="index">1</view>
+                <image class="photo"></image>
+                <view class="details">
+                    <text class="group-name">小组2</text>
+                    <text class="num">4人</text>
+                </view>
+                <view class="score">288.53分</view>
+            </view>
+            <view class="rank-card">
+                <view class="index">1</view>
+                <image class="photo"></image>
+                <view class="details">
+                    <text class="group-name">小组2</text>
+                    <text class="num">4人</text>
+                </view>
+                <view class="score">288.53分</view>
+            </view>
+            <view class="rank-card">
+                <view class="index">1</view>
+                <image class="photo"></image>
+                <view class="details">
+                    <text class="group-name">小组2</text>
+                    <text class="num">4人</text>
+                </view>
+                <view class="score">288.53分</view>
+            </view>
+            <view class="rank-card">
+                <view class="index">1</view>
+                <image class="photo"></image>
+                <view class="details">
+                    <text class="group-name">小组2</text>
+                    <text class="num">4人</text>
+                </view>
+                <view class="score">288.53分</view>
+            </view>
+            <view class="rank-card">
+                <view class="index">1</view>
+                <image class="photo"></image>
+                <view class="details">
+                    <text class="group-name">小组2</text>
+                    <text class="num">4人</text>
+                </view>
+                <view class="score">288.53分</view>
+            </view>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from '@wepy/core'
+    import eventHub from '../common/eventHub';
+    import request from '../common/request';
+    //    import store from '../store';
+    import testMixin from '../mixins/test';
+    const api = {
+        base(params){
+            return request({
+                url: 'https://api.epk.kingsmith.com.cn/V0.2/',
+                data: params,
+                method:'post',
+                header: {
+                    'content-type': 'application/json' // 默认值
+                }
+            })
+        }
+    }
+    wepy.page({
+//        store,
+        config: {
+            navigationBarTitleText: 'test',
+
+        },
+
+        hooks: {
+            // Page 级别 hook, 只对当前 Page 的 setData 生效。
+            'before-setData': function (dirty) {
+
+            }
+        },
+        mounted:function(){
+
+        },
+        mixins: [testMixin],
+
+        data: {
+            ksid: "40036",
+            matchid:"1357",
+            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkua2luZ3NtaXRoLmNvbS5jbiIsImtzaWQiOiIxMDAiLCJpYXQiOjE0NTIwNzI3NTUsImV4cCI6MTQ1MjY3NzU1NX0.F7hSClqAfG9jqP4V02AzH3bk4L1HFuyUjuMV50MWuJU",
+
+        },
+
+        computed: {
+
+        },
+
+        methods:{
+           init(){
+               api.base({
+                       "service": "team.getMatchInfo",
+                       "ksid": this.ksid,
+                       "matchid":this.matchid,
+                       "token": this.token,
+                }).then((res)=>{
+                   console.log(res)
+               })
+           },
+        },
+
+        created () {
+
+            this.init()
+
+
+        }
+    });
+</script>
+<style lang="less">
+    page{
+        background:#F4F5F9;
+    }
+    .ranking{
+        width:100%;
+        height:100%;
+        .banner{
+            width: 750rpx;
+            height:284rpx;
+            background: #000 no-repeat top;
+            background-size:cover;
+            box-sizing:border-box;
+            padding-top:63rpx;
+            padding-left:63rpx;
+            .title{
+                font-size:40rpx;
+                font-weight: bold;
+                color:#fff;
+                margin-bottom: 40rpx;;
+            }
+            .time{
+                font-size:20rpx;
+                color:#fff;
+                font-weight: bold;
+                margin-bottom:30rpx;
+            }
+            .desc{
+                font-size:22rpx;
+                color:#fff;
+                font-weight: bold;
+            }
+        }
+        .rank-list{
+            padding-top:39rpx;
+            margin-bottom:100rpx;
+            .rank-card{
+                width: 690rpx;
+                height: 152rpx;
+                box-sizing: border-box;
+                padding-left: 35rpx;
+                border-radius: 15rpx;
+                background: #fff;
+                margin: 0 auto;
+                display:flex;
+                align-items:center;
+                .index{
+                    font-size:40rpx;
+                    font-weight: bold;
+                    color:#9966CC;
+                    width: 50rpx;
+                    line-height: 152rpx;
+                    margin-right: 7rpx;
+                }
+                .photo{
+                    width: 82rpx;
+                    height: 82rpx;
+                    border-radius: 100%;
+                    background: #000;
+                    margin-right: 20rpx;
+                }
+                .details{
+                    width:260rpx;
+                    margin-right:4rpx;
+                    text{
+                        display: block;
+                    }
+                    .group-name{
+                        font-weight: bold;
+                        font-size:24rpx;
+                        color:#212121;
+                        margin-bottom:20rpx;
+                    }
+                    .num{
+                        font-size:22rpx;
+                        color:rgba(33,33,33,0.6);
+                    }
+                }
+                .score{
+                    font-size:36rpx;
+                    color: #212121;
+                }
+            }
+        }
+    }
+</style>

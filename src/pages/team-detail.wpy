@@ -1,0 +1,278 @@
+<wxs module="m1" lang="babel">
+
+</wxs>
+<template>
+    <pageWrap>
+        <view class="team-detail">
+            <image class="photo"></image>
+            <view class="title">十全十美组</view>
+            <view class="desc">钢铁是怎样炼成的</view>
+            <view class="result">
+                <view class="card">
+                    <view class="num n1">12.22</view>
+                    <view class="unit">总得分(分)</view>
+                </view>
+                <view class="card">
+                    <view class="num">10.22</view>
+                    <view class="unit">总跑量(公里)</view>
+                </view>
+            </view>
+            <view class="list">
+                <view class="item">
+                    <image class="u-photo"></image>
+                    <view class="u-name">
+                        <view class="text">请叫我树先生立刻现在</view>
+                        <view class="icons">
+                            <view>组长</view>
+                        </view>
+                    </view>
+                    <view class="u-score">
+                        <view class="n">0.00分</view>
+                        <view class="p">0.00公里</view>
+                    </view>
+                </view>
+                <view class="item">
+                    <image class="u-photo"></image>
+                    <view class="u-name">
+                        <view class="text">请叫我树先生立刻现在</view>
+                        <view class="icons">
+                            <view>组长</view>
+                        </view>
+                    </view>
+                    <view class="u-score">
+                        <view class="n">0.00分</view>
+                        <view class="p">0.00公里</view>
+                    </view>
+                </view>
+                <view class="item">
+                    <image class="u-photo"></image>
+                    <view class="u-name">
+                        <view class="text">请叫我树先生立刻现在</view>
+                        <view class="icons">
+                            <view>组长</view>
+                        </view>
+                    </view>
+                    <view class="u-score">
+                        <view class="n">0.00分</view>
+                        <view class="p">0.00公里</view>
+                    </view>
+                </view>
+                <view class="item">
+                    <image class="u-photo"></image>
+                    <view class="u-name">
+                        <view class="text">请叫我树先生立刻现在</view>
+                        <view class="icons">
+                            <view>组长</view>
+                        </view>
+                    </view>
+                    <view class="u-score">
+                        <view class="n">0.00分</view>
+                        <view class="p">0.00公里</view>
+                    </view>
+                </view>
+                <view class="item">
+                    <image class="u-photo"></image>
+                    <view class="u-name">
+                        <view class="text">请叫我树先生立刻现在</view>
+                        <view class="icons">
+                            <view>组长</view>
+                        </view>
+                    </view>
+                    <view class="u-score">
+                        <view class="n">0.00分</view>
+                        <view class="p">0.00公里</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </pageWrap>
+</template>
+<script>
+    import wepy from '@wepy/core'
+    import eventHub from '../common/eventHub';
+    import api from '../common/request';
+    import store from '../store';
+    import testMixin from '../mixins/test';
+
+    wepy.page({
+//        store,
+        config: {
+            navigationBarTitleText: 'test',
+
+        },
+
+        hooks: {
+            // Page 级别 hook, 只对当前 Page 的 setData 生效。
+            'before-setData': function (dirty) {
+
+            }
+        },
+        mounted:function(){
+
+        },
+        mixins: [testMixin],
+
+        data: {
+            ksid: "40036",
+            matchid:"1357",
+            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkua2luZ3NtaXRoLmNvbS5jbiIsImtzaWQiOiIxMDAiLCJpYXQiOjE0NTIwNzI3NTUsImV4cCI6MTQ1MjY3NzU1NX0.F7hSClqAfG9jqP4V02AzH3bk4L1HFuyUjuMV50MWuJU",
+
+        },
+
+        computed: {
+
+        },
+
+        methods:{
+            init(){
+
+            },
+        },
+
+        created () {
+
+            this.init()
+
+
+        }
+    });
+</script>
+<style lang="less">
+    page{
+        background:#F4F5F9;
+    }
+    .team-detail{
+        display:flex;
+        justify-content:center;
+        flex-wrap:wrap;
+        padding-bottom:35rpx;
+        .photo{
+            width:130rpx;
+            height: 130rpx;
+            border-radius: 100%;
+            background:#000;
+            margin-top:130rpx;
+            margin-bottom:20rpx
+        }
+        .title{
+            font-size:30rpx;
+            font-weight: bold;
+            color:#212121;
+            width: 100%;
+            text-align: center;
+            margin-bottom:17rpx
+        }
+        .desc{
+            font-size:26rpx;
+            font-weight: bold;
+            color:#212121;
+            width: 100%;
+            text-align: center;
+            margin-bottom:27rpx;
+        }
+        .result{
+            display:flex;
+            padding: 0 27rpx;
+            justify-content: space-around;
+            width:100%;
+            margin-bottom:22rpx;
+            .card{
+                border-radius:20rpx;
+                width: 338rpx;
+                height:180rpx;
+                background: #fff;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                align-content: center;
+                box-shadow:0px 1px 4px 0px rgba(153,102,204,0.15);
+                .unit{
+                    font-size:22rpx;
+                    color:rgba(33,33,33,.6);
+                    width: 100%;
+                    text-align: center;
+                }
+                .num{
+                    font-size:42rpx;
+                    font-weight: bold;
+                    color:rgba(33,33,33,1);
+                    width:100%;
+                    text-align: center;
+                    &.n1{
+                        color:#9966CC
+                    }
+                }
+            }
+        }
+        .list{
+            width:690rpx;
+            margin:0 auto;
+            background:#fff;
+            padding-left:20rpx;
+            box-sizing:border-box;
+            border-radius:20rpx;
+            box-shadow:0px 1px 4px 0px rgba(153,102,204,0.15);
+            .item{
+                display:flex;
+                align-items: center;
+                padding-top:30rpx;
+                padding-bottom:28rpx;
+                border-bottom:2rpx solid #EDEDED;
+                &:last-child{
+                    border-bottom: none;
+                 }
+                .u-photo{
+                    width: 82rpx;
+                    height:82rpx;
+                    border-radius: 100%;
+                    background: #000;
+                    margin-right: 23rpx;
+                }
+                .u-name{
+                    width: 300rpx;
+                    font-size:28rpx;
+                    margin-right:16rpx;
+                    .text{
+                        font-size:28rpx;
+                        margin-bottom:17rpx;
+                    }
+                    .icons{
+                        view{
+                            width:70rpx;
+                            height:36rpx;
+                            background:rgba(153,102,204,1);
+                            border-radius:4rpx;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color:#fff;
+                            font-size:20rpx;
+                        }
+                    }
+                }
+                .u-score{
+                    width: 220rpx;
+                    text-align:right;
+                    .n{
+                        font-size:28rpx;
+                        font-weight: bold;
+                        margin-bottom:17rpx;
+                    }
+                    .p{
+                        font-size:22rpx;
+                        color:rgba(33,33,33,.6);
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<config>
+    {
+        "usingComponents": {
+            "pageWrap": "../components/pageWrap"
+        }
+    }
+</config>
