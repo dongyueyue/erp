@@ -4,6 +4,7 @@ var prod = process.env.NODE_ENV === 'production';
 module.exports = {
   wpyExt: '.wpy',
   cliLogs: !prod,
+  static: 'src/images/icons',
   build: {
   },
   resolve: {

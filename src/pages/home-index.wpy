@@ -14,34 +14,32 @@
 </wxs>
 <template>
     <pageWrap>
-        <view class="home" v-if="login">
-            <view class="home-title">
-                <view class="logo">EPK</view>
-                <text class="word">进入App与跑友一起参与PK</text>
-                <view class="btn">立刻打开</view>
-            </view>
+        <view class="home" v-if="isLogin">
             <view class="home-item">
-                <view class="home-item-title">{{homeData.title}}</view>
-                <view class="toggle" @click="getHistory"></view>
-                <view class="home-match-list rankbar" v-show="rankbar">
-                    <view  v-for="(item,index) in homeData.list" class="progress-li li1">
+                <view class="home-item-title">{{homeData.matchInfo.title}}</view>
+                <view class="toggle" @click="getHistory">
+                    <view class="arrow {{rankbar?'up':'down'}}"></view>
+                </view>
+                <view class="home-match-list rankbar {{openList?'showmore':''}}" v-show="rankbar" >
+                    <view  v-for="(item,index) in homeData.list" @click="jumpMatchDetail" class="progress-li li1">
                         <view class="progress-bg">
                             <view class="progress-bar" style="width: {{item.score*100/homeData.total}}%"></view>
                             <view class="img" style="background-image: url('{{item.avatar}}')"></view>
                         </view>
                         <view class="progress-name">{{item.name}}</view>
                     </view>
+                    <view class="more-btn" @click="toggle">
+                        <view class="arrow {{openList?'up':'down'}}"></view>
+                    </view>
                 </view>
                 <view class="home-match-list ranklist" v-show="!rankbar">
                     <view v-for="(item,index) in homeData.history" @click="matchDetail(item.matchid)">{{item.title}}</view>
-
-
                 </view>
             </view>
             <view class="home-item" v-if="homeData.yueList&&homeData.yueList.length>0">
                 <view class="home-item-title">约跑</view>
                 <view class="home-active-list">
-                    <view v-for="(item,index) in homeData.yueList" class="home-active-list-item" style="background-image: url({{item.avatar}})">
+                    <view @click="jump(item)" v-for="(item,index) in homeData.yueList" class="home-active-list-item" style="background-image: url({{item.avatar}})">
                         <text class="home-active-list-item-title">{{item.title}}</text>
                         <text class="home-active-list-item-msg">参与人数: {{item.user}}人</text>
                         <text class="home-active-list-item-msg">{{item.start}}</text>
@@ -51,13 +49,8 @@
             </view>
             <view class="home-item" v-else>
                 <view class="home-item-title">暂无活动</view>
-                <view class="home-yuepao-no-data"></view>
+                <defaultSection type="true" msg="暂无活动"></defaultSection>
             </view>
-
-        </view>
-        <view class="home notLoginIn" v-else>
-            <image src="../images/hasnone.png" alt=""></image>
-            <view class="login-btn">立即登录</view>
         </view>
     </pageWrap>
 </template>
@@ -65,8 +58,10 @@
     import wepy from '@wepy/core'
     import eventHub from '../common/eventHub';
     import request from '../common/request';
+    import { mapState } from '@wepy/x';
     import store from '../store';
-    import testMixin from '../mixins/test';
+    import authConfig from '../store/mod/authConfig';
+    const loginType = authConfig.loginType
     const api = request
     wepy.page({
         store,
@@ -80,57 +75,59 @@
 
             }
         },
-        mixins: [testMixin],
+        mixins: [],
 
         data: {
-            name:'lixiao',
-            login:true,
             rankbar:true,
-            ksid:'40036',
-            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkua2luZ3NtaXRoLmNvbS5jbiIsImtzaWQiOiIxMDAiLCJpYXQiOjE0NTIwNzI3NTUsImV4cCI6MTQ1MjY3NzU1NX0.F7hSClqAfG9jqP4V02AzH3bk4L1HFuyUjuMV50MWuJU",
-            markers:[
-                {
-                    id:0,
-                    latitude: 23.099994,
-                    longitude: 113.324520,
-                    title:'haha',
-                    iconPath:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567919241294&di=405aaa21db3b7a70a840b2b691c1dc14&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201405%2F27%2F20140527174544_K8Zsr.thumb.600_0.jpeg',
-                    callout:{
-                        content:'haha',
-                        color:'red',
-                        fontSize:'22'
-                    }
-                }
-            ],
             homeData:{
                 list:[],
                 total:0,
-                title:'',
+                matchInfo:{},
                 history:[],
                 yueList:null
-            }
+            },
+            openList:false,
 //            curMatchList:[],
 //            curMatch:{}
         },
 
         computed: {
-
+            ...mapState(['auth']),
+            isLogin(){
+                if(this.auth.loginType==loginType.LOGIN || this.auth.loginType == loginType.WILLLOGIN){
+                    return true
+                }else {
+                    return false;
+                }
+            }
         },
         methods:{
-
+            toggle(){
+                this.openList = !this.openList
+            },
+            jump(item){
+                wx.navigateTo({
+                    url:'rundetail?id='+item.id
+                })
+            },
+            jumpMatchDetail(){
+                wx.navigateTo({
+                    url:'ranking?id='+this.homeData.matchInfo.matchid
+                })
+            },
             initHomeData(data){
 //                this.homeData.list.splice(0, this.homeData.list.length,...data.info.list )
                 this.homeData.list = data.info.list
                 let total = 0
                 this.homeData.list.forEach(item=>total+=Number(item.score))
                 this.homeData.total = total;
-                this.homeData.title = data.info.match_info.title
+                this.homeData.matchInfo = data.info.match_info
             },
             matchDetail(matchid){
                 request.api({
                     "service": "find.getDynamic",
-                    "ksid": this.ksid,
-                    "token": this.token,
+                    "ksid": this.auth.user.ksid,
+                    "token": this.auth.user.token,
                     "match_id":matchid
                 }).then(res=>{
                     if(res.data.data.code==0){
@@ -143,10 +140,10 @@
             getYue(teamId,matchId){
                 request.api({
                     "service": "run.getRunList",
-                    "ksid": this.ksid,
+                    "ksid": this.auth.user.ksid,
                     "team_id": "369",
                     "page": "1",
-                    "token": this.token
+                    "token": this.auth.user.token
                 }).then(res=>{
                     if(res.data.data.code==0){
                         this.homeData.yueList = res.data.data.info
@@ -162,8 +159,8 @@
                     request.api(
                             {
                                 "service": "team.getMyMatchList",
-                                "ksid": this.ksid,
-                                "token": this.token
+                                "ksid": this.auth.user.ksid,
+                                "token": this.auth.user.token
                             }
                     ).then(res => {
                         if(res.data.data.code == 0){
@@ -185,6 +182,46 @@
 <style lang="less">
     page{
         background:#F4F5F9;
+    }
+    .more-btn{
+        height: 30rpx;
+        width: 100%;
+        position: absolute;
+        bottom:0;
+    }
+    .arrow{
+        position:absolute;
+        left:50%;
+        &:after,&:before{
+            content:'';
+            width: 2rpx;
+            height: 18rpx;
+            background: #000;
+            position:absolute;
+            transition: all .6s ease;
+         }
+         &.down{
+            &:after{
+                 left:6rpx;
+                 transform: rotate(45deg);
+             }
+            &:before{
+                 left:-6rpx;
+                 transform: rotate(-45deg);
+             }
+          }
+
+        &.up{
+            &:after{
+                 left:6rpx;
+                 transform: rotate(-45deg);
+             }
+            &:before{
+                 left:-6rpx;
+                 transform: rotate(45deg);
+             }
+        }
+
     }
     .notLoginIn{
         image{
@@ -273,9 +310,9 @@
                 position: absolute;
                 top:40rpx;
                 right:30rpx;
-                width:28rpx;
-                height:16rpx;
-                background-color:#000;
+                width:50rpx;
+                height:50rpx;
+
                 /*background:url(../images/toggle.png) no-repeat center;*/
                 /*-webkit-background-size:28rpx 16rpx;*/
                 /*background-size:28rpx 16rpx;*/
@@ -295,10 +332,10 @@
                 }
             }
             .home-match-list.rankbar{
-                over-flow:hidden;
-                height:500rpx;
+                overflow:hidden;
+                max-height:500rpx;
                 &.showmore{
-                    height:auto;
+                    max-height:5000rpx;
                  }
                 .progress-li{
                     padding-left:40rpx;
@@ -480,7 +517,8 @@
 <config>
     {
         "usingComponents": {
-            "pageWrap": "../components/pageWrap"
+            "pageWrap": "../components/pageWrap",
+            "defaultSection": "../components/defaultSection"
         }
     }
 </config>

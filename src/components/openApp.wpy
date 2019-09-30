@@ -1,0 +1,79 @@
+<style lang="less">
+    .openApp{
+       width: 750rpx;
+       height:88rpx;
+       background: #fff;
+       display:flex;
+       align-items: center;
+       box-sizing:border-box;
+       padding-left:20rpx;
+       position:relative;
+        z-index:5;
+       image{
+           width: 43rpx;
+           height: 43rpx;
+           border-radius: 100%;
+           margin-right: 30rpx;
+       }
+       .txt{
+           color:#363636;
+           font-size:26rpx;
+           font-weight:bold;
+           text-align: left;
+           margin-right:30rpx;
+           width: 424rpx;
+       }
+       button{
+           width: 150rpx;
+           height: 47rpx;
+           border-radius: 24rpx;
+           background: #9966CC;
+           color:#fff;
+           font-size:26rpx;
+           font-weight:bold;
+           line-height: 47rpx;
+       }
+    }
+</style>
+<template>
+    <view class="openApp">
+        <image src="../images/logo_s.png"></image>
+        <view class="txt">进入App与跑友一起参与PK</view>
+        <button open-type="launchApp" app-parameter="wechat" binderror="launchAppError">打开app</button>
+    </view>
+</template>
+<script>
+    import wepy from '@wepy/core'
+    wepy.component({
+        data: {
+
+        },
+        props:['type','open'],
+        events: {
+
+        },
+        computed:{
+
+        },
+
+        methods: {
+            launchAppError(res){
+                wx.showToast({
+                    title: '请下载app',
+                    icon: 'none',
+                    duration: 2000
+                })
+            }
+        },
+        created(){
+
+        },
+    });
+</script>
+
+<config>
+    {
+    "usingComponents": {
+    }
+    }
+</config>

@@ -2,7 +2,6 @@
 
 </wxs>
 <template>
-
         <view class="login">
             <view>
                 <view class="title">注册新账户</view>
@@ -21,16 +20,16 @@
             </view>
 
         </view>
-
+        <authLink @jumpBack="jumpBack"></authLink>
 </template>
 <script>
     import wepy from '@wepy/core'
     import eventHub from '../common/eventHub';
     import store from '../store';
-    import testMixin from '../mixins/test'
     import request from '../common/request';
-    import md5 from 'md5'
-    console.log(md5)
+    import md5 from 'md5';
+    import authConfig from '../store/mod/authConfig';
+    const loginType = authConfig.loginType
     wepy.page({
         store,
         config: {
@@ -45,7 +44,7 @@
         },
 
 
-        mixins: [testMixin],
+        mixins: [],
 
         data: {
             phone:'',
@@ -64,23 +63,59 @@
         },
 
         methods:{
+            jumpBack(){
+                wx.navigateBack({
+                    delta: 2
+                })
+            },
             register(){
                 if(this.validate()){
+
                     request.api({
                         "service": "WechatMini.phoneReg",
                         "phone": this.phone,
-                        "pwd":this.password,
+                        "pwd":md5(this.password),
                         "verifyCode":this.vercode
                     }).then(res=>{
+                        let data = res.data.data
+                        if(data.code == 0 ){
+                            this.$store.commit('setServerDataInUser',data)
+                            if(!data.info.wx_openid || !data.info.wx_unionid){
+                                this.$store.commit('setLoginType',loginType.WILLLOGIN)
+                                this.$store.dispatch('authorizeFaillToUN')
+                            }else{
+                                this.$store.commit('setLoginType',loginType.LOGIN)
+                            }
+                            wx.navigateTo({
+                                url:'home-user'
+                            })
 
-                        if(res.data.ret == 200 ){
-
+                        }else if(data.code == 102){
+                            wx.showToast({
+                                title: '无效手机号',
+                                icon: 'none',
+                                duration: 2000
+                            })
+                        }else if(data.code == 103){
+                            wx.showToast({
+                                title: '手机号已经注册',
+                                icon: 'none',
+                                duration: 2000
+                            })
+                        }else if(data.code == 101){
+                            wx.showToast({
+                                title: '验证码错误',
+                                icon: 'none',
+                                duration: 2000
+                            })
                         }else{
-                            console.log('手机号错误')
+                            wx.showToast({
+                                title: res.data.msg,
+                                icon: 'none',
+                                duration: 2000
+                            })
                         }
                     })
-                }else{
-                    console.log('缺少')
                 }
             },
             sendCode(){
@@ -93,11 +128,18 @@
                     "phone": this.phone,
                     "handle":"1"
                 }).then(res=>{
-                    console.log(res)
-                    if(res.data.ret == 200 ){
-
+                    if(res.data.ret==200&&res.data.data.code==0){
+                        wx.showToast({
+                            title: '验证码已发送',
+                            icon: 'none',
+                            duration: 2000
+                        })
                     }else{
-                        console.log('手机号错误')
+                        wx.showToast({
+                            title: res.data.msg||res.data.data.msg,
+                            icon: 'none',
+                            duration: 2000
+                        })
                     }
                 })
             },
@@ -113,16 +155,36 @@
                 this.codeParam.times = this.codeParam.codeDuration
             },
             validate(){
-                if(!this.phone||!this.vercode|| !this.password){
+                if(!this.phone){
+                    wx.showToast({
+                        title: '请输入手机号',
+                        icon: 'none',
+                        duration: 2000
+                    })
                     return false;
                 }
+                if(!this.vercode){
+                    wx.showToast({
+                        title: '请输入验证码',
+                        icon: 'none',
+                        duration: 2000
+                    })
+                    return false;
+                }
+                if(!this.password){
+                    wx.showToast({
+                        title: '请输入密码',
+                        icon: 'none',
+                        duration: 2000
+                    })
+                    return false;
+                }
+
                 return true;
             }
         },
 
         created () {
-            console.log('login========================')
-            console.log(this)
 
         }
     });
@@ -216,7 +278,7 @@
 <config>
     {
         "usingComponents": {
-        "pageWrap": "../components/pageWrap"
+            "authLink": "../components/authLinkUser"
         }
     }
 </config>

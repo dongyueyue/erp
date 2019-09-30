@@ -36,13 +36,15 @@ wepy.app({
 <config>
 {
     pages: [
-        'pages/home-user',
         'pages/home-index',
+        'pages/home-user',
         'pages/team-detail',
         'pages/ranking',
         'pages/register',
         'pages/login',
         'pages/rundetail',
+        'pages/shop'
+
     ],
     "tabBar": {
         "custom": false,
@@ -53,14 +55,20 @@ wepy.app({
         "list": [
             {
                 "pagePath": "pages/home-index",
-                "iconPath": "",
-                "selectedIconPath": "",
+                "iconPath": "images/icons/icon1.png",
+                "selectedIconPath": "images/icons/icon1_cur.png",
                 "text": "活动"
             },
             {
+                "pagePath": "pages/shop",
+                "iconPath": "images/icons/icon2.png",
+                "selectedIconPath": "images/icons/icon2_cur.png",
+                "text": "商城"
+            },
+            {
                 "pagePath": "pages/home-user",
-                "iconPath": "",
-                "selectedIconPath": "",
+                "iconPath": "images/icons/icon3.png",
+                "selectedIconPath": "images/icons/icon3_cur.png",
                 "text": "我的"
             }
         ]

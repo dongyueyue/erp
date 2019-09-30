@@ -1,0 +1,50 @@
+<style lang="less">
+    .defaultSection{
+        width:750rpx;
+        image{
+            width: 432rpx;
+            height: 355rpx;
+            display:block;
+            margin:0 auto 30rpx;
+        }
+        .msg{
+            font-size:28rpx;
+            text-align: center;
+            font-weight: bold;
+        }
+    }
+</style>
+<template>
+    <view class="defaultSection">
+        <image src="../images/hasnone.png"></image>
+        <view class="msg">{{msg||''}}</view>
+    </view>
+</template>
+<script>
+    import wepy from '@wepy/core'
+    wepy.component({
+        data: {
+
+        },
+        props:['type','msg'],
+        events: {
+
+        },
+        computed:{
+        },
+
+        methods: {
+
+        },
+        created(){
+
+        },
+    });
+</script>
+
+<config>
+    {
+        "usingComponents": {
+        }
+    }
+</config>

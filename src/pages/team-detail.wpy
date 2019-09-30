@@ -4,83 +4,31 @@
 <template>
     <pageWrap>
         <view class="team-detail">
-            <image class="photo"></image>
-            <view class="title">十全十美组</view>
-            <view class="desc">钢铁是怎样炼成的</view>
+            <image class="photo" src="{{teamData.group_info.avatar}}"></image>
+            <view class="title">{{teamData.group_info.name}}</view>
+            <view class="desc">{{teamData.group_info.slogan}}</view>
             <view class="result">
                 <view class="card">
-                    <view class="num n1">12.22</view>
+                    <view class="num n1">{{teamData.group_info.score}}</view>
                     <view class="unit">总得分(分)</view>
                 </view>
                 <view class="card">
-                    <view class="num">10.22</view>
+                    <view class="num">{{teamData.group_info.distance}}</view>
                     <view class="unit">总跑量(公里)</view>
                 </view>
             </view>
             <view class="list">
-                <view class="item">
-                    <image class="u-photo"></image>
+                <view class="item" v-for="item in teamData.list">
+                    <image class="u-photo" src="{{item.avatar}}"></image>
                     <view class="u-name">
-                        <view class="text">请叫我树先生立刻现在</view>
-                        <view class="icons">
+                        <view class="text">{{item.nickname}}</view>
+                        <view class="icons" v-if="item.leader==1">
                             <view>组长</view>
                         </view>
                     </view>
                     <view class="u-score">
-                        <view class="n">0.00分</view>
-                        <view class="p">0.00公里</view>
-                    </view>
-                </view>
-                <view class="item">
-                    <image class="u-photo"></image>
-                    <view class="u-name">
-                        <view class="text">请叫我树先生立刻现在</view>
-                        <view class="icons">
-                            <view>组长</view>
-                        </view>
-                    </view>
-                    <view class="u-score">
-                        <view class="n">0.00分</view>
-                        <view class="p">0.00公里</view>
-                    </view>
-                </view>
-                <view class="item">
-                    <image class="u-photo"></image>
-                    <view class="u-name">
-                        <view class="text">请叫我树先生立刻现在</view>
-                        <view class="icons">
-                            <view>组长</view>
-                        </view>
-                    </view>
-                    <view class="u-score">
-                        <view class="n">0.00分</view>
-                        <view class="p">0.00公里</view>
-                    </view>
-                </view>
-                <view class="item">
-                    <image class="u-photo"></image>
-                    <view class="u-name">
-                        <view class="text">请叫我树先生立刻现在</view>
-                        <view class="icons">
-                            <view>组长</view>
-                        </view>
-                    </view>
-                    <view class="u-score">
-                        <view class="n">0.00分</view>
-                        <view class="p">0.00公里</view>
-                    </view>
-                </view>
-                <view class="item">
-                    <image class="u-photo"></image>
-                    <view class="u-name">
-                        <view class="text">请叫我树先生立刻现在</view>
-                        <view class="icons">
-                            <view>组长</view>
-                        </view>
-                    </view>
-                    <view class="u-score">
-                        <view class="n">0.00分</view>
-                        <view class="p">0.00公里</view>
+                        <view class="n">{{item.score}}分</view>
+                        <view class="p">{{item.distance}}公里</view>
                     </view>
                 </view>
             </view>
@@ -92,10 +40,13 @@
     import eventHub from '../common/eventHub';
     import api from '../common/request';
     import store from '../store';
-    import testMixin from '../mixins/test';
+    import { mapState } from '@wepy/x';
+    import request from '../common/request';
+    import authConfig from '../store/mod/authConfig';
+    const loginType = authConfig.loginType
 
     wepy.page({
-//        store,
+        store,
         config: {
             navigationBarTitleText: 'test',
 
@@ -110,28 +61,48 @@
         mounted:function(){
 
         },
-        mixins: [testMixin],
+        mixins: [],
 
         data: {
-            ksid: "40036",
-            matchid:"1357",
-            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkua2luZ3NtaXRoLmNvbS5jbiIsImtzaWQiOiIxMDAiLCJpYXQiOjE0NTIwNzI3NTUsImV4cCI6MTQ1MjY3NzU1NX0.F7hSClqAfG9jqP4V02AzH3bk4L1HFuyUjuMV50MWuJU",
-
+            groupid:'',
+            teamData:{}
         },
 
         computed: {
-
+            ...mapState(['auth']),
+            isLogin(){
+                if(this.auth.loginType==loginType.LOGIN || this.auth.loginType == loginType.WILLLOGIN){
+                    return true
+                }else {
+                    return false;
+                }
+            }
         },
 
         methods:{
             init(){
-
+                request.api({
+                    "service": "team.getGroupScore",
+                    "ksid": this.auth.user.ksid,
+                    "groupid": this.groupid,
+                    "token": this.auth.user.token
+                }).then(res=>{
+                    let data = res.data.data
+                    if(data.code==0){
+                        this.teamData = data.info
+                    }
+                })
             },
         },
 
+        onLoad(res){
+            this.groupid = res.id
+            this.init();
+
+        },
         created () {
 
-            this.init()
+
 
 
         }
@@ -271,8 +242,9 @@
 
 <config>
     {
-        "usingComponents": {
-            "pageWrap": "../components/pageWrap"
+    "usingComponents": {
+            "pageWrap": "../components/pageWrap",
+            "defaultSection": "../components/defaultSection"
         }
     }
 </config>

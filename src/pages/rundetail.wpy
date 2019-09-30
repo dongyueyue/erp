@@ -2,99 +2,84 @@
 
 </wxs>
 <template>
-    <view class="rundetail">
-        <view class="banner">
-            <view class="title">奥森公园约跑</view>
-            <view class="des">[一起来PK跑团]</view>
-        </view>
-        <view class="section">
-            <view class="s-title">约跑信息</view>
-            <view class="detail-list">
-                <view class="detail-list-item">
-                    <text>活动名称</text>
-                    <text>{{rundetials.title}}</text>
-                </view>
-                <view class="detail-list-item">
-                    <text>活动时间</text>
-                    <text>{{rundetials.start}}</text>
-                </view>
-                <view class="detail-list-item">
-                    <text>活动时长</text>
-                    <text>{{rundetials.run_time}}</text>
-                </view>
-                <view class="detail-list-item">
-                    <text>活动区间最快配速</text>
-                    <text>{{rundetials.pace_max}}</text>
-                </view>
-                <view class="detail-list-item">
-                    <text>活动区间最慢配速</text>
-                    <text>{{rundetials.pace_min}}</text>
-                </view>
-                <view class="detail-list-item">
-                    <text>约跑最小公里数</text>
-                    <text>{{rundetials.min_dist}}</text>
+    <pageWrap>
+        <view class="rundetail" v-if="isLogin">
+            <view class="banner" style="background-image:url({{rundetials.avatar}})">
+                <view class="title">{{rundetials.title}}</view>
+                <view class="des">[{{rundetials.team_name}}]</view>
+            </view>
+            <view class="section">
+                <view class="s-title">约跑信息</view>
+                <view class="detail-list">
+                    <view class="detail-list-item">
+                        <text>活动名称</text>
+                        <text>{{rundetials.title}}</text>
+                    </view>
+                    <view class="detail-list-item">
+                        <text>活动时间</text>
+                        <text>{{rundetials.start}}</text>
+                    </view>
+                    <view class="detail-list-item">
+                        <text>活动时长</text>
+                        <text>{{rundetials.run_time}}</text>
+                    </view>
+                    <view class="detail-list-item">
+                        <text>活动区间最快配速</text>
+                        <text>{{rundetials.pace_max}}</text>
+                    </view>
+                    <view class="detail-list-item">
+                        <text>活动区间最慢配速</text>
+                        <text>{{rundetials.pace_min}}</text>
+                    </view>
+                    <view class="detail-list-item">
+                        <text>约跑最小公里数</text>
+                        <text>{{rundetials.min_dist}}</text>
+                    </view>
                 </view>
             </view>
-        </view>
-        <view class="section">
-            <view class="s-title">活动内容</view>
-            <view class="detail-text">{{rundetials.introduction}} </view>
-        </view>
-        <view class="section">
-            <view class="s-title">提示</view>
-            <view class="detail-text">
-                北京丰台区总部基地18区25号楼阿达阿
-                达王企鹅群翁群翁，群无驱蚊器二阿萨达阿
-                达奥术大师大所大 阿萨达阿达 阿萨达 阿萨
-                北京丰台区总部基地18区25号楼阿达阿
-                达王企鹅群翁群翁，群无驱蚊器二阿萨达阿
-                达奥术大师大所大 阿萨达阿达 阿萨达 阿萨
-                达王企鹅群翁群翁，群无驱蚊器二阿萨达阿
-                达奥术大师大所大 阿萨达阿达 阿萨达 阿萨
-                达王企鹅群翁群翁，群无驱蚊器二阿萨达阿
-                达奥术大师大所大 阿萨达阿达 阿萨达 阿萨
-                达王企鹅群翁群翁，群无驱蚊器二阿萨达阿
-                达奥术大师大所大 阿萨达阿达 阿萨达 阿萨
+            <view class="section">
+                <view class="s-title">活动内容</view>
+                <view class="detail-text">{{rundetials.introduction}} </view>
             </view>
-        </view>
-        <view class="section">
-            <view class="s-title">约跑地点</view>
-            <map class="section-map" bindtap="test" markers="markers"></map>
-        </view>
-        <view class="section">
-            <view class="s-title">已报名人员</view>
-            <view class="ready-person">
-                <view class="ready-person-item" v-for="item in runnerDet">
-                    <image mode="aspectFill" :src="item.user_avatar"></image>
-                    <text>{{item.user_name}}</text>
+            <view class="section">
+                <view class="s-title">提示</view>
+                <view class="detail-text">
+                    1.参与活动打卡成功，且配速以及跑步计分类型符合PK活动设定，基于打卡记录在活动中的得分会有额外倍数的积分奖励。
+                    2.约跑记录必须当日23点59分59秒前上传到服务器，否则不记录打卡以及加成分数
+                    3.聊天在约跑结束一周后自动解散。
+                    4.约跑位置依据GPS定位，请跑步前确认GPS是开启状态，且EPK具有定位权限，否则无法打卡。
+                    5.当多个约跑间有交集的情况下，只能报名其中一个，当所报名的约跑结束后（开始时间+约跑时长）才可以报名其它有时间交集的约跑。
                 </view>
             </view>
-        </view>
+            <view class="section">
+                <view class="s-title">约跑地点</view>
+                <map class="section-map" scale="15" show-location="true" markers="{{mapData.markers}}" longitude="{{mapData.longitude}}" latitude="{{mapData.latitude}}"></map>
+            </view>
+            <view class="section">
+                <view class="s-title">已报名人员</view>
+                <view class="ready-person">
+                    <view class="ready-person-item" v-for="item in runnerDet">
+                        <image mode="aspectFill" :src="item.user_avatar"></image>
+                        <text>{{item.user_name}}</text>
+                    </view>
+                </view>
+            </view>
 
-        <view class="btns-bottom">
-            <view class="btn">报名</view>
-            <view class="btn">分享</view>
+            <view class="btns-bottom">
+                <view class="btn" @click="join">报名</view>
+                <button class="btn" open-type="share">分享</button>
+                <!--<view class="btn" @click="share">分享</view>-->
+            </view>
         </view>
-    </view>
+    </pageWrap>
 </template>
 <script>
     import wepy from '@wepy/core'
-    import eventHub from '../common/eventHub';
     import store from '../store';
-    import testMixin from '../mixins/test'
+    import { mapState } from '@wepy/x';
     import request from '../common/request';
-    const api = {
-        base(params){
-            return request({
-                url: 'https://api.epk.kingsmith.com.cn/V0.2/',
-                data: params,
-                method:'post',
-                header: {
-                    'content-type': 'application/json' // 默认值
-                }
-            })
-        }
-    }
+    import authConfig from '../store/mod/authConfig';
+    const loginType = authConfig.loginType
     wepy.page({
         store,
         config: {
@@ -109,61 +94,105 @@
         },
 
 
-
-        mixins: [testMixin],
-
-        data: {
-            name:'lixiao',
-            ksid:'40036',
-            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkua2luZ3NtaXRoLmNvbS5jbiIsImtzaWQiOiIxMDAiLCJpYXQiOjE0NTIwNzI3NTUsImV4cCI6MTQ1MjY3NzU1NX0.F7hSClqAfG9jqP4V02AzH3bk4L1HFuyUjuMV50MWuJU",
-            matchid:1281,
-            run_id:1281,
-            rundetials:[],
-            runnerDet:[],
-            markers:[
-                {
-                    id:0,
-                    latitude: 23.099994,
-                    longitude: 113.324520,
-                    title:'haha',
-                    iconPath:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567919241294&di=405aaa21db3b7a70a840b2b691c1dc14&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201405%2F27%2F20140527174544_K8Zsr.thumb.600_0.jpeg',
-                    callout:{
-                        content:'haha',
-                        color:'red',
-                        fontSize:'22'
-                    }
+        computed:{
+            ...mapState(['auth']),
+            isLogin(){
+                if(this.auth.loginType==loginType.LOGIN || this.auth.loginType == loginType.WILLLOGIN){
+                    return true
+                }else {
+                    return false;
                 }
-            ]
+            }
         },
 
-        computed: {
-//      ...mapState([ 'counter' ]),
-//      testcomputed () {
-//        return 'computed - ' + this.mynum;
-//      }
+        mixins: [],
+
+        data: {
+            mapData:{
+                latitude: "",
+                longitude: "",
+                markers: [],
+            },
+            run_id:'',
+            rundetials:{},
+            runnerDet:[]
         },
 
         methods:{
             init(){
-                api.base({
+                request.api({
                     "service": "run.getRunDetail",
-                    "ksid": this.ksid,
-                    "token": this.token,
-                    "match_id":this.matchid,
-                    "run_id":this.run_id,
+                    "ksid": this.auth.user.ksid,
+                    "token": this.auth.user.token,
+                    "run_id":this.runid,
                 }).then(res=>{
                     if(res.data.data.code==0){
                         this.rundetials = res.data.data.info.run_list;
                         this.runnerDet = res.data.data.info.run_user;
-                    console.log(res)
+                        this.mapData.latitude = this.rundetials.lat;
+                        this.mapData.longitude = this.rundetials.lng;
+                        this.mapData.markers = [{
+                            id: "1",
+                            latitude: this.rundetials.lat,
+                            longitude: this.rundetials.lng,
+                            width: 20,
+                            height: 20,
+                            iconPath: "",
+                            callout:{}
+                        }]
+                        let startD = new Date(this.rundetials.start);
+                        let now = new Date();
+                        if(now.getTime()<startD.getTime()){
+                            this.mapData.markers[0].callout = {
+                                content:'时间未到',
+                                bgColor:'#FF8686',
+                                borderColor:'#FF8686',
+                                color:'#fff',
+                                borderRadius:'8',
+                                padding:8,
+                                textAlign:'center',
+                                display:'ALWAYS'
+                            }
+                        }
+                    }
+                })
+            },
+            join(){
+                request.api({
+                    "service": "run.joinRun",
+                    "ksid": this.auth.user.ksid,
+                    "run_id": this.runid,
+                    "token": this.auth.user.token
+                }).then(res=>{
+                    if(res.data.data.code==0){
+                        wx.showToast({
+                            title: '报名成功',
+                            icon: 'none',
+                            duration: 2000
+                        })
+                    }else{
+                        wx.showToast({
+                            title: res.data.msg || res.data.data.msg,
+                            icon: 'none',
+                            duration: 2000
+                        })
                     }
                 })
             }
         },
-
-        created () {
+        onLoad(res){
+            this.runid = res.id
             this.init();
 
+        },
+        onShareAppMessage(){
+            return {
+                title: this.rundetials.title,
+                path: '/pages/rundetail?id='+this.runid,
+//                imageUrl:''
+            }
+        },
+        created () {
         }
     });
 </script>
@@ -287,8 +316,17 @@
                 font-size: 34rpx;
                 color:#fff;
                 background: #9964CE;
+                border-radius: 0;
             }
         }
     }
 </style>
+<config>
+    {
+        "usingComponents": {
+            "pageWrap": "../components/pageWrap",
+            "defaultSection": "../components/defaultSection"
+        }
+    }
+</config>
 

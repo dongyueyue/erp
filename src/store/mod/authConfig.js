@@ -10,6 +10,7 @@ export default {
         'UNLOGIN':0, //未登录
         'LOGIN':1, //已登录
         'UNREGIEST':2, //未注册
-        "HALF":3 //已注册未绑定手机
+        'HALF':3, //已注册未绑定手机
+        'WILLLOGIN': 4 //登录未绑定微信
     }
 }

@@ -1,100 +1,54 @@
-<wxs module="m1" lang="babel">
-
+<wxs module="tempFun" lang="babel">
+    const typeFilter = (type) => {
+        if(type==1){
+            return '报名中';
+        }else if(type == 2){
+            return '分组中';
+        }else if(type==3){
+            return '进行中';
+        }else if(type==4){
+            return '已结束'
+        }else if(type == 5){
+            return '已取消'
+        }else{
+            return '未开始'
+        }
+    }
+    module.exports.typeFilter = typeFilter;
 </wxs>
 <template>
-    <view class="ranking">
-        <view class="banner" >
-            <view class="title">大肚年,小蛮腰</view>
-            <view class="time">2019=2019</view>
-            <view class="desc">进行中 积分赛</view>
-        </view>
-        <view class="rank-list">
-            <view class="rank-card">
-                <view class="index">1</view>
-                <image class="photo"></image>
-                <view class="details">
-                    <text class="group-name">小组2</text>
-                    <text class="num">4人</text>
-                </view>
-                <view class="score">288.53分</view>
+    <pageWrap>
+        <view class="ranking">
+            <view class="banner" style="background-image:url({{matchData.avatar}})">
+                <view class="title">{{matchData.title}}</view>
+                <view class="time">{{matchData.start}}={{matchData.end}}</view>
+                <view class="desc">{{tempFun.typeFilter(matchData.type)}} 积分赛</view>
             </view>
-            <view class="rank-card">
-                <view class="index">1</view>
-                <image class="photo"></image>
-                <view class="details">
-                    <text class="group-name">小组2</text>
-                    <text class="num">4人</text>
+            <view class="rank-list">
+                <view class="rank-card" @click="jump(item.groupid)" v-for="item in matchData.group_list">
+                    <view class="index">{{item.sort}}</view>
+                    <image class="photo" src="{{item.avatar}}"></image>
+                    <view class="details">
+                        <text class="group-name">{{item.name}}</text>
+                        <text class="num">{{item.numb}}人</text>
+                    </view>
+                    <view class="score">{{item.score}}分</view>
                 </view>
-                <view class="score">288.53分</view>
-            </view>
-            <view class="rank-card">
-                <view class="index">1</view>
-                <image class="photo"></image>
-                <view class="details">
-                    <text class="group-name">小组2</text>
-                    <text class="num">4人</text>
-                </view>
-                <view class="score">288.53分</view>
-            </view>
-            <view class="rank-card">
-                <view class="index">1</view>
-                <image class="photo"></image>
-                <view class="details">
-                    <text class="group-name">小组2</text>
-                    <text class="num">4人</text>
-                </view>
-                <view class="score">288.53分</view>
-            </view>
-            <view class="rank-card">
-                <view class="index">1</view>
-                <image class="photo"></image>
-                <view class="details">
-                    <text class="group-name">小组2</text>
-                    <text class="num">4人</text>
-                </view>
-                <view class="score">288.53分</view>
-            </view>
-            <view class="rank-card">
-                <view class="index">1</view>
-                <image class="photo"></image>
-                <view class="details">
-                    <text class="group-name">小组2</text>
-                    <text class="num">4人</text>
-                </view>
-                <view class="score">288.53分</view>
-            </view>
-            <view class="rank-card">
-                <view class="index">1</view>
-                <image class="photo"></image>
-                <view class="details">
-                    <text class="group-name">小组2</text>
-                    <text class="num">4人</text>
-                </view>
-                <view class="score">288.53分</view>
+
             </view>
         </view>
-    </view>
+    </pageWrap>
 </template>
 <script>
     import wepy from '@wepy/core'
     import eventHub from '../common/eventHub';
+    import { mapState } from '@wepy/x';
     import request from '../common/request';
-    //    import store from '../store';
-    import testMixin from '../mixins/test';
-    const api = {
-        base(params){
-            return request({
-                url: 'https://api.epk.kingsmith.com.cn/V0.2/',
-                data: params,
-                method:'post',
-                header: {
-                    'content-type': 'application/json' // 默认值
-                }
-            })
-        }
-    }
+    import store from '../store';
+    import authConfig from '../store/mod/authConfig';
+    const loginType = authConfig.loginType;
     wepy.page({
-//        store,
+        store,
         config: {
             navigationBarTitleText: 'test',
 
@@ -109,36 +63,50 @@
         mounted:function(){
 
         },
-        mixins: [testMixin],
+        mixins: [],
 
         data: {
-            ksid: "40036",
-            matchid:"1357",
-            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkua2luZ3NtaXRoLmNvbS5jbiIsImtzaWQiOiIxMDAiLCJpYXQiOjE0NTIwNzI3NTUsImV4cCI6MTQ1MjY3NzU1NX0.F7hSClqAfG9jqP4V02AzH3bk4L1HFuyUjuMV50MWuJU",
-
+            matchData:{},
+            matchId:''
         },
 
         computed: {
-
+            ...mapState(['auth']),
+            isLogin(){
+                if(this.auth.loginType==loginType.LOGIN || this.auth.loginType == loginType.WILLLOGIN){
+                    return true
+                }else {
+                    return false;
+                }
+            }
         },
 
         methods:{
            init(){
-               api.base({
+               request.api({
                        "service": "team.getMatchInfo",
-                       "ksid": this.ksid,
-                       "matchid":this.matchid,
-                       "token": this.token,
+                       "ksid": this.auth.user.ksid,
+                       "matchid":this.matchId,
+                       "token": this.auth.user.token,
                 }).then((res)=>{
-                   console.log(res)
+                   let data = res.data.data
+                   if(data.code==0){
+                        this.matchData = data.info
+                    }
                })
            },
+           jump(id){
+                wx.navigateTo({
+                    url:'team-detail?id='+id
+                })
+            }
         },
+        onLoad(res){
+            this.matchId = res.id
+            this.init();
 
+        },
         created () {
-
-            this.init()
-
 
         }
     });
@@ -189,6 +157,7 @@
                 margin: 0 auto;
                 display:flex;
                 align-items:center;
+                margin-bottom:20rpx;
                 .index{
                     font-size:40rpx;
                     font-weight: bold;
@@ -229,3 +198,11 @@
         }
     }
 </style>
+<config>
+    {
+        "usingComponents": {
+            "pageWrap": "../components/pageWrap",
+            "defaultSection": "../components/defaultSection"
+        }
+    }
+</config>

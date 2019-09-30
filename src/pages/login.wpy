@@ -14,27 +14,24 @@
       <view v-show="loginType.UNLOGIN == auth.loginType">
         <view class="icon"></view>
         <view class="input-item">
-          <input placeholder="请输入手机号" placeholder-style="color:rgba(237,237,237,.8);">
+          <input placeholder="请输入手机号" v-model="phone" placeholder-style="color:rgba(237,237,237,.8);">
         </view>
         <view class="input-item">
-          <input type="password" placeholder="请输入密码" placeholder-style="color:rgba(237,237,237,.8);">
+          <input type="password" v-model="password" placeholder="请输入密码" placeholder-style="color:rgba(237,237,237,.8);">
         </view>
-        <view class="turn-link">
-          <text>忘记密码</text>
-          <text class="line">|</text>
-          <text @click="register">用户注册</text>
-        </view>
-        <view class="l-btn">登录</view>
+
+        <view class="l-btn mt" @click="login">登录</view>
+        <view class="l-btn" @click="register">新用户注册</view>
       </view>
-
     </view>
-
+    <authLink @jumpBack="jumpBack"></authLink>
 </template>
 <script>
   import wepy from '@wepy/core'
   import eventHub from '../common/eventHub';
   import store from '../store';
-  import testMixin from '../mixins/test';
+  import request from '../common/request';
+  import md5 from 'md5';
   import { mapState } from '@wepy/x';
   import authConfig from '../store/mod/authConfig';
   const loginType = authConfig.loginType
@@ -55,19 +52,86 @@
       ...mapState(['auth'])
     },
 
-    mixins: [testMixin],
+    mixins: [],
 
     data: {
-      loginType
+      loginType,
+      phone:'',
+      password:''
     },
 
 
     methods:{
+      jumpBack(){
+        wx.navigateBack({
+          delta: 1
+        })
+      },
       register(){
         wx.navigateTo({
           url:'register'
         })
-      }
+      },
+      validate(){
+        if(!this.phone || !this.password){
+          return false;
+        }
+        return true;
+      },
+      login(){
+        if(!this.validate()){
+          wx.showToast({
+            title: '手机号或者密码错误',
+            icon: 'none',
+            duration: 2000
+          })
+          return ;
+        }
+        request.api({
+          "service": "WechatMini.phoneLogin",
+          "phone": this.phone,
+          "pwd":md5(this.password)
+        }).then(res=>{
+          let data = res.data.data
+          if(data.code == 0 ){
+            this.$store.commit('setServerDataInUser',data)
+            if(!data.info.wx_openid || !data.info.wx_unionid){
+              this.$store.commit('setLoginType',loginType.WILLLOGIN)
+              this.$store.dispatch('authorizeFaillToUN')
+            }else{
+              this.$store.commit('setLoginType',loginType.LOGIN)
+              wx.navigateTo({
+                url:'home-user'
+              })
+            }
+          }else if(data.code == 102){
+            wx.showToast({
+              title: '无效手机号',
+              icon: 'none',
+              duration: 2000
+            })
+          }else if(data.code == 103){
+            wx.showToast({
+              title: '手机号已经注册',
+              icon: 'none',
+              duration: 2000
+            })
+          }else if(data.code == 101){
+            wx.showToast({
+              title: '验证码错误',
+              icon: 'none',
+              duration: 2000
+            })
+          }else{
+            wx.showToast({
+              title: data.msg,
+              icon: 'none',
+              duration: 2000
+            })
+          }
+        })
+      },
+
     },
 
     created () {
@@ -108,7 +172,10 @@
       border-radius:15rpx;
       width: 564rpx;
       height: 89rpx;
-      margin:0 auto;
+      margin:0 auto 37rpx;
+      &.mt{
+        margin-top:79rpx;
+       }
     }
   }
   .input-item{
@@ -146,7 +213,8 @@
 <config>
   {
     "usingComponents": {
-      "pageWrap": "../components/pageWrap"
+      "pageWrap": "../components/pageWrap",
+      "authLink": "../components/authLinkUser"
     }
   }
 </config>

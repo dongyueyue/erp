@@ -1,0 +1,81 @@
+<style lang="less">
+    .noLoginDefault{
+        display:flex;
+        position:fixed;
+        width:100%;
+        height:100%;
+        left:0;
+        top:0;
+        background:#F4F5F9;
+        align-items: center;
+        align-content:center;
+        flex-wrap:wrap;
+        z-index:3;
+        .loginBtn{
+            width: 608rpx;
+            height: 85rpx;
+            border-radius: 8rpx;
+            font-size:28rpx;
+            background: #fff;
+            color:#363636;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin:50rpx auto 0;
+        }
+    }
+</style>
+<template>
+    <view class="noLoginDefault" v-if="!isLogin">
+        <defaultSection msg="您还未登哦！登录后体验更多功能"></defaultSection>
+        <view class="loginBtn" @click="tologin">登录/注册</view>
+    </view>
+</template>
+<script>
+    import wepy from '@wepy/core'
+    import store from '../store';
+    import { mapState } from '@wepy/x';
+    import authConfig from '../store/mod/authConfig';
+    const loginType = authConfig.loginType
+    wepy.component({
+        store,
+        data: {
+
+        },
+        props:['type','open'],
+        events: {
+
+        },
+        computed:{
+
+            ...mapState(['auth']),
+            isLogin(){
+                if(this.auth.loginType==loginType.LOGIN || this.auth.loginType == loginType.WILLLOGIN){
+                    return true
+                }else {
+                    return false;
+                }
+            }
+        },
+
+        methods: {
+            tologin(){
+                wx.navigateTo({
+                    url:'login'
+                })
+            }
+        },
+        created(){
+
+        },
+    });
+</script>
+
+<config>
+    {
+        "usingComponents": {
+            "defaultSection": "../components/defaultSection"
+        }
+    }
+</config>

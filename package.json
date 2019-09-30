@@ -18,6 +18,7 @@
   "dependencies": {
     "@wepy/core": "^2.0.0-alpha.9",
     "@wepy/x": "^2.0.2",
+    "md5": "^2.2.1",
     "miniprogram-slide-view": "0.0.3",
     "vue": "^2.6.10"
   },

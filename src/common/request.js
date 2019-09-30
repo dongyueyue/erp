@@ -19,7 +19,7 @@ export default {
     },
     api:function(params){
         return this.request({
-            url: host,
+            url: testurl,
             data: params,
             method:'post',
             header: {

@@ -1,0 +1,64 @@
+<wxs module="tempFun" lang="babel">
+
+</wxs>
+<template>
+    <web-view src="https://shop43707006.youzan.com/v2/feature/A9llbf9Jqb"></web-view>
+</template>
+<script>
+    import wepy from '@wepy/core'
+    import eventHub from '../common/eventHub';
+    import { mapState } from '@wepy/x';
+    import request from '../common/request';
+    import store from '../store';
+    import authConfig from '../store/mod/authConfig';
+    const loginType = authConfig.loginType;
+    wepy.page({
+        store,
+        config: {
+            navigationBarTitleText: 'test',
+
+        },
+
+        hooks: {
+            // Page 级别 hook, 只对当前 Page 的 setData 生效。
+            'before-setData': function (dirty) {
+
+            }
+        },
+        mounted:function(){
+
+        },
+        mixins: [],
+
+        data: {
+        },
+
+        computed: {
+            ...mapState(['auth']),
+            isLogin(){
+                if(this.auth.loginType==loginType.LOGIN || this.auth.loginType == loginType.WILLLOGIN){
+                    return true
+                }else {
+                    return false;
+                }
+            }
+        },
+
+        methods:{
+
+        },
+        onLoad(res){
+
+
+        },
+        created () {
+
+        }
+    });
+</script>
+<style lang="less">
+    page{
+        background:#F4F5F9;
+    }
+
+</style>

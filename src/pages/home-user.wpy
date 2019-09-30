@@ -3,14 +3,15 @@
 </wxs>
 <template>
     <pageWrap>
-        <view class="home-user">
 
-            <view class="logined" v-if="auth.loginType==loginType.LOGIN">
+        <view class="home-user">
+            <view class="logined" v-if="isLogin">
                 <view class="user-card">
                     <image src="{{auth.user.avatar}}"></image>
                     <view class="text">{{auth.user.name}}</view>
                 </view>
-                <view class="btn">退出登录</view>
+                <view v-if="auth.loginType==loginType.WILLLOGIN" class="btn forwx" @click="toLogin">关联微信</view>
+                <view class="btn" @click="exit">退出登录</view>
             </view>
             <view class="no-data" v-else>
                 <image src="../images/hasnone.png"></image>
@@ -18,13 +19,13 @@
                 <view class="btn" @click="toLogin">登录/注册</view>
             </view>
         </view>
+
     </pageWrap>
 </template>
 <script>
     import wepy from '@wepy/core'
     import { mapState } from '@wepy/x';
     import store from '../store';
-    import testMixin from '../mixins/test';
     import authConfig from '../store/mod/authConfig';
     const loginType = authConfig.loginType
     wepy.page({
@@ -41,9 +42,16 @@
             }
         },
         computed:{
-            ...mapState(['auth'])
+            ...mapState(['auth']),
+            isLogin(){
+                if(this.auth.loginType==loginType.LOGIN || this.auth.loginType == loginType.WILLLOGIN){
+                    return true
+                }else {
+                    return false;
+                }
+            }
         },
-        mixins: [testMixin],
+        mixins: [],
 
         data: {
             loginType
@@ -53,9 +61,13 @@
                 wx.navigateTo({
                     url:'login'
                 })
+            },
+            exit(){
+                this.$store.commit('setLoginType',loginType.UNLOGIN)
             }
         },
         created () {
+
         }
     });
 </script>
@@ -91,11 +103,7 @@
             height:100%;
             box-sizing: border-box;
             padding-top:1rpx;
-            .btn{
-                position: absolute;
-                bottom: 260rpx;
-                left:70rpx;
-            }
+
         }
         .user-card{
             width: 699rpx;
@@ -135,14 +143,22 @@
             justify-content: center;
             align-items: center;
             background: #fff;
-            margin:0rpx auto 0;
+        }
+        .btn{
+            position: absolute;
+            bottom: 200rpx;
+            left:70rpx;
+            &.forwx{
+                 bottom: 80rpx;
+             }
         }
     }
 </style>
 <config>
     {
         "usingComponents": {
-            "pageWrap": "../components/pageWrap"
+            "pageWrap": "../components/pageWrap",
+
         }
     }
 </config>

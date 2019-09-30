@@ -1,16 +1,10 @@
-
-//const userType = {
-//    'UNUSERSET':0, //未授权
-//    'USERSETSUCCESS':1, //已授权
-//    'USERSETFAIL':2, //授权失败
-//    'LOGIN':3, //已登录
-//}
 import config from './authConfig';
 import request from '../../common/request';
 const loginType = config.loginType
 const authorizeType = config.authorizeType
 const state = {
     user:{},
+    wxmsg:{},
     authorize:authorizeType.UNAUTHORIZE,
     loginType:loginType.UNLOGIN,
     loaded:false
@@ -20,14 +14,36 @@ const getters = {
 }
 
 const mutations = {
+    setWxMsg(state,data){
+        state.wxmsg = data
+    },
     setUser(state,user){
+        if(!user.name){
+            user.name = state.user.name
+        }
+        if(!user.avatar){
+            user.avatar = state.user.avatar
+        }
+        state.user = user;
+    },
+    setServerDataInUser(state,data){
+        let newUser = {
+            name:data.info.nickname,
+            avatar:data.info.avatar,
+            token:data.info.token,
+            ksid:data.info.ksid,
+            unionid:data.info.wx_unionid,
+            openid:data.info.wx_openid,
+            phone:data.info.phone
+        }
+        if(!newUser.name){
+            newUser.name = state.user.name
+        }
+        if(!newUser.avatar){
+            newUser.avatar = state.user.avatar
+        }
 
-        state.user = {
-            name:user.name,
-            avatar:user.avatar,
-            token:user.token,
-            ksid:user.ksid
-        };
+        state.user = newUser
     },
     setAuthorize(state,type){
         state.authorize = type
@@ -42,25 +58,21 @@ const mutations = {
 }
 
 const actions = {
-    initWXUser(context,loginData){
+    getWXUserInfo(context,cb){
         wx.getSetting({
             success(res) {
                 if (res.authSetting['scope.userInfo']) {
                     wx.getUserInfo({
                         success (res) {
                             if(res.errMsg=="getUserInfo:ok"){
-                                context.commit('setUser',{
+                                let userData = {
                                     name:res.userInfo.nickName,
                                     avatar:res.userInfo.avatarUrl,
-                                    token:'',
-                                    ksid:''
-                                })
+                                }
+
+                                context.commit('setWxMsg',userData)
                                 context.commit('setAuthorize',authorizeType.SUCCESS)
-                                context.dispatch('checkUser',{
-                                    code:loginData.code,
-                                    iv:res.iv,
-                                    encryptedData:res.encryptedData
-                                })
+                                cb&&cb(res)
                             }else{
                                 context.commit('setAuthorize',authorizeType.UNAUTHORIZE)
                             }
@@ -74,50 +86,46 @@ const actions = {
             }
         })
     },
-    initLogin(context){
+    linkCheckUser(context,callback){
         wx.login({
-            success:function(res){
-                if(res.code){
-                    context.dispatch('initWXUser',res)
+            success:function(loginData){
+                if(loginData.code){
+                    context.dispatch('getWXUserInfo',function(res){
+                        context.dispatch('checkUser',{
+                            params:{
+                                code:loginData.code,
+                                iv:res.iv,
+                                encryptedData:res.encryptedData
+                            },
+                            cb:function(data){
+                                callback&&callback(data)
+
+                            }
+                        })
+                    })
                 }else{
                     context.commit('setAuthorize',authorizeType.UNAUTHORIZE)
                 }
             }
         })
+
     },
-    checkUser(context,params){
+    initLogin(context){
+        context.dispatch('linkCheckUser',function(data){
+            if(data.code==0){
+                context.dispatch('serverLoginByWX',{unionid:data.info.wx_unionid})
+            }
+        })
+    },
+    checkUser(context,option){
         request.api({
             "service": "WechatMini.CheckUser",
-            "code": params.code,
-            "iv": params.iv,
-            "encryptedData": params.encryptedData
+            "code": option.params.code,
+            "iv": option.params.iv,
+            "encryptedData": option.params.encryptedData
         }).then(function(res){
             var data = res.data.data
-            if(data.code==0){
-                context.commit('setUser',{
-                    name:data.info.nickname,
-                    avatar:data.info.avatar,
-                    ksid:data.info.ksid,
-                    unionid:data.info.wx_unionid,
-                    openid:data.info.wx_openid,
-                    token:'',
-                    phone:''
-                })
-                context.dispatch('serverLoginByWX',{unionid:data.info.wx_unionid})
-            }else if(data.code ==  137){
-                context.commit('setUser',{
-                    name:data.info.nickname,
-                    avatar:data.info.avatar,
-                    ksid:data.info.ksid,
-                    unionid:data.info.wx_unionid,
-                    openid:data.info.wx_openid,
-                    token:'',
-                    phone:''
-                })
-                context.commit('setLoginType',loginType.HALF)
-            }else{
-                context.commit('setLoginType',loginType.UNLOGIN)
-            }
+            option.cb&&option.cb(data)
         })
     },
     serverLoginByWX(context,params){
@@ -127,20 +135,20 @@ const actions = {
         }).then(function(res){
             var data = res.data.data
             if(data.code == 0){
-                context.commit('setUser',{
-                    name:data.info.nickname,
-                    avatar:data.info.avatar,
-                    token:data.info.token,
-                    ksid:data.info.ksid,
-                    unionid:data.info.wx_unionid,
-                    openid:data.info.wx_openid,
-                    phone:data.info.phone
-                })
+                context.commit('setServerDataInUser',data)
                 context.commit('setLoginType',loginType.LOGIN)
+            }else if(data.code ==  137){
+                context.commit('setServerDataInUser',data)
+                context.commit('setLoginType',loginType.HALF)
             }else{
                 context.commit('setLoginType',loginType.UNLOGIN)
             }
         })
+    },
+    authorizeFaillToUN(context){
+        if(context.state.authorize == authorizeType.FAIL){
+            context.commit('setAuthorize',authorizeType.UNAUTHORIZE)
+        }
     }
 }
 

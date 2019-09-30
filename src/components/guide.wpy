@@ -5,6 +5,7 @@
         position: fixed;
         left:0;
         top:0;
+        z-index: 5;
         background: rgba(0,0,0,.6);
         display: flex;
         align-items: center;
@@ -12,24 +13,54 @@
     }
 </style>
 <template>
-    <view class="guide" v-if="type">
+    <view class="guide" v-if="guideType">
         <button open-type="getUserInfo" bindgetuserinfo="userinfo">请授权给我们</button>
     </view>
 </template>
 <script>
     import wepy from '@wepy/core'
+    import store from '../store';
+    import { mapState } from '@wepy/x';
+    import authConfig from '../store/mod/authConfig';
+    const authorizeType = authConfig.authorizeType;
+    const loginType = authConfig.loginType
     wepy.component({
+        store,
         data: {
 
         },
-        props:['type'],
+        props:['type','open'],
         events: {
 
         },
+        computed:{
+            ...mapState(['auth']),
+            guideType(){
+                if(this.auth.loginType==loginType.LOGIN){
+                    return false;
+                }
+                if(this.auth.authorize == authorizeType.UNAUTHORIZE){
+                   return true;
+                }else{
+                    return false
+                }
 
+            }
+        },
         methods: {
-            userinfo(res){
-                this.$emit('userinfo',res.$wx.detail)
+            userinfo(data){
+                let res = data.$wx.detail
+                if(res&&res.errMsg=='getUserInfo:fail auth deny'){
+                    this.$store.commit('setAuthorize',authorizeType.FAIL)
+                    this.$emit('guideBack',res)
+                }else{
+                    if(this.type=='userInfo'){
+                        this.$store.dispatch('getWXUserInfo')
+                    }else{
+                        this.$store.dispatch('initLogin')
+                    }
+
+                }
             }
         },
         created(){

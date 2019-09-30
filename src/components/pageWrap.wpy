@@ -6,8 +6,10 @@
 </style>
 <template>
     <view class="appPage">
+        <openApp></openApp>
         <slot></slot>
-        <guide :type="guideType" @userinfo="initUser"></guide>
+        <guide></guide>
+        <noLogin></noLogin>
     </view>
 </template>
 <script>
@@ -15,14 +17,10 @@
     import store from '../store';
     import { mapState } from '@wepy/x';
     import authConfig from '../store/mod/authConfig';
-    const authorizeType = authConfig.authorizeType;
-    const loginType = authConfig.loginType
     wepy.component({
         store,
         data: {
-            guideType:false,
-            authorizeType,
-            curType:null
+
         },
 
         events: {
@@ -30,26 +28,15 @@
         },
 
         methods: {
-            initUser(res){
-                if(res&&res.errMsg=='getUserInfo:fail auth deny'){
-                    this.$store.commit('setAuthorize',authorizeType.FAIL)
-                }else{
-                    this.$store.dispatch('initLogin')
-                }
-            }
+
         },
         computed:{
             ...mapState(['auth']),
-            guideType(){
-                return (this.auth.authorize == authorizeType.UNAUTHORIZE) && this.auth.loaded == true
-
-            }
         },
         created(){
-            this.initUser()
+            this.$store.dispatch('initLogin')
         },
         onLoad () {
-            console.log('loadwrap')
         }
     });
 </script>
@@ -57,7 +44,9 @@
 <config>
     {
         "usingComponents": {
-            'guide':'./guide'
+            'guide':'./guide',
+            'noLogin':'./noLoginDefault',
+            'openApp':'./openApp'
         }
     }
 </config>
