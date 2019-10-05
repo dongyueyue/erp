@@ -14,6 +14,7 @@
 </wxs>
 <template>
     <pageWrap>
+
         <view class="home" v-if="isLogin">
             <view class="home-item">
                 <view class="home-item-title">{{homeData.matchInfo.title}}</view>
@@ -21,36 +22,49 @@
                     <view class="arrow {{rankbar?'up':'down'}}"></view>
                 </view>
                 <view class="home-match-list rankbar {{openList?'showmore':''}}" v-show="rankbar" >
-                    <view  v-for="(item,index) in homeData.list" @click="jumpMatchDetail" class="progress-li li1">
-                        <view class="progress-bg">
-                            <view class="progress-bar" style="width: {{item.score*100/homeData.total}}%"></view>
-                            <view class="img" style="background-image: url('{{item.avatar}}')"></view>
+                   <load :open = "!homeListLoaded">
+                        <view v-if="homeData.list.length>0">
+                            <view  v-for="(item,index) in homeData.list" @click="jumpMatchDetail" class="progress-li li1">
+                                <view class="progress-bg">
+                                    <view class="progress-bar" style="width: {{item.score*100/homeData.total}}%"></view>
+                                    <view class="img" style="background-image: url('{{item.avatar}}')"></view>
+                                </view>
+                                <view class="progress-name">{{item.name}}</view>
+                            </view>
+                            <view class="more-btn" @click="toggle">
+                                <view class="arrow {{openList?'up':'down'}}"></view>
+                            </view>
                         </view>
-                        <view class="progress-name">{{item.name}}</view>
-                    </view>
-                    <view class="more-btn" @click="toggle">
-                        <view class="arrow {{openList?'up':'down'}}"></view>
-                    </view>
+                        <defaultSection v-else type="true" msg="暂无数据"></defaultSection>
+                   </load>
                 </view>
                 <view class="home-match-list ranklist" v-show="!rankbar">
-                    <view v-for="(item,index) in homeData.history" @click="matchDetail(item.matchid)">{{item.title}}</view>
+                    <load :open="!rankListLoaded">
+                        <view v-for="(item,index) in homeData.history" @click="matchDetail(item.matchid)">{{item.title}}</view>
+                    </load>
                 </view>
             </view>
-            <view class="home-item" v-if="homeData.yueList&&homeData.yueList.length>0">
-                <view class="home-item-title">约跑</view>
-                <view class="home-active-list">
-                    <view @click="jump(item)" v-for="(item,index) in homeData.yueList" class="home-active-list-item" style="background-image: url({{item.avatar}})">
-                        <text class="home-active-list-item-title">{{item.title}}</text>
-                        <text class="home-active-list-item-msg">参与人数: {{item.user}}人</text>
-                        <text class="home-active-list-item-msg">{{item.start}}</text>
-                        <text class="status">{{tempFun.typeFilter(item.type)}}</text>
+
+            <view class="home-item" >
+                <load :open="!yueLoaded">
+                    <view v-if="homeData.yueList&&homeData.yueList.length>0">
+                        <view class="home-item-title">约跑</view>
+                        <view class="home-active-list">
+                            <view @click="jump(item)" v-for="(item,index) in homeData.yueList" class="home-active-list-item" style="background-image: url({{item.avatar}})">
+                                <text class="home-active-list-item-title">{{item.title}}</text>
+                                <text class="home-active-list-item-msg">参与人数: {{item.user}}人</text>
+                                <text class="home-active-list-item-msg">{{item.start}}</text>
+                                <text class="status">{{tempFun.typeFilter(item.type)}}</text>
+                            </view>
+                        </view>
                     </view>
-                </view>
+                    <view v-else>
+                        <view class="home-item-title">暂无活动</view>
+                        <defaultSection type="true" msg="暂无活动"></defaultSection>
+                    </view>
+                </load>
             </view>
-            <view class="home-item" v-else>
-                <view class="home-item-title">暂无活动</view>
-                <defaultSection type="true" msg="暂无活动"></defaultSection>
-            </view>
+
         </view>
     </pageWrap>
 </template>
@@ -86,6 +100,9 @@
                 history:[],
                 yueList:null
             },
+            homeListLoaded:false,
+            rankListLoaded:false,
+            yueLoaded:false,
             openList:false,
 //            curMatchList:[],
 //            curMatch:{}
@@ -100,6 +117,11 @@
                     return false;
                 }
             }
+        },
+        watch:{
+            'auth.user.ksid'(){
+                this.matchDetail()
+            },
         },
         methods:{
             toggle(){
@@ -124,6 +146,10 @@
                 this.homeData.matchInfo = data.info.match_info
             },
             matchDetail(matchid){
+                if(!this.auth.user.ksid){
+                    return;
+                }
+                this.homeListLoaded = false;
                 request.api({
                     "service": "find.getDynamic",
                     "ksid": this.auth.user.ksid,
@@ -135,9 +161,11 @@
                         this.rankbar = true;
                         this.getYue(res.data.data.info.match_info.team_id,res.data.data.info.match_info.matchid)
                     }
+                    this.homeListLoaded = true;
                 })
             },
             getYue(teamId,matchId){
+                this.yueLoaded = false;
                 request.api({
                     "service": "run.getRunList",
                     "ksid": this.auth.user.ksid,
@@ -148,6 +176,7 @@
                     if(res.data.data.code==0){
                         this.homeData.yueList = res.data.data.info
                     }
+                    this.yueLoaded = true;
                 })
             },
             getHistory(){
@@ -156,6 +185,7 @@
                     return;
                 }
                 if (!this.rankbar) {
+                    this.rankListLoaded = false;
                     request.api(
                             {
                                 "service": "team.getMyMatchList",
@@ -166,13 +196,13 @@
                         if(res.data.data.code == 0){
                             this.homeData.history = res.data.data.info.list
                         }
+                        this.rankListLoaded = true;
                     })
                 }
             }
         },
         created () {
             this.matchDetail()
-
         },
         components:{
 
@@ -251,6 +281,10 @@
         border-radius:30rpx;
         margin:0 auto;
     }
+    .defaultCard{
+        width: 640rpx;
+        height: 500rpx;
+    }
     .home{
         background:#F4F5F9;
         min-height:100%;
@@ -300,6 +334,7 @@
         }
         .home-item{
             width: 750rpx;
+            min-height:300rpx;
             padding: 39rpx 0;
             background:rgba(255,255,255,1);
             border-radius:30rpx;
@@ -316,6 +351,9 @@
                 /*background:url(../images/toggle.png) no-repeat center;*/
                 /*-webkit-background-size:28rpx 16rpx;*/
                 /*background-size:28rpx 16rpx;*/
+            }
+            .home-match-list{
+                min-height: 300rpx;
             }
             .home-match-list.ranklist{
                 margin:10rpx 20rpx 20rpx;
@@ -518,7 +556,8 @@
     {
         "usingComponents": {
             "pageWrap": "../components/pageWrap",
-            "defaultSection": "../components/defaultSection"
+            "defaultSection": "../components/defaultSection",
+            "load":"../components/loading"
         }
     }
 </config>

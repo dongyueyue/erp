@@ -3,36 +3,38 @@
 </wxs>
 <template>
     <pageWrap>
-        <view class="team-detail">
-            <image class="photo" src="{{teamData.group_info.avatar}}"></image>
-            <view class="title">{{teamData.group_info.name}}</view>
-            <view class="desc">{{teamData.group_info.slogan}}</view>
-            <view class="result">
-                <view class="card">
-                    <view class="num n1">{{teamData.group_info.score}}</view>
-                    <view class="unit">总得分(分)</view>
+        <load :open="!detailLoaded">
+            <view class="team-detail">
+                <image class="photo" src="{{teamData.group_info.avatar}}"></image>
+                <view class="title">{{teamData.group_info.name}}</view>
+                <view class="desc">{{teamData.group_info.slogan}}</view>
+                <view class="result">
+                    <view class="card">
+                        <view class="num n1">{{teamData.group_info.score}}</view>
+                        <view class="unit">总得分(分)</view>
+                    </view>
+                    <view class="card">
+                        <view class="num">{{teamData.group_info.distance}}</view>
+                        <view class="unit">总跑量(公里)</view>
+                    </view>
                 </view>
-                <view class="card">
-                    <view class="num">{{teamData.group_info.distance}}</view>
-                    <view class="unit">总跑量(公里)</view>
-                </view>
-            </view>
-            <view class="list">
-                <view class="item" v-for="item in teamData.list">
-                    <image class="u-photo" src="{{item.avatar}}"></image>
-                    <view class="u-name">
-                        <view class="text">{{item.nickname}}</view>
-                        <view class="icons" v-if="item.leader==1">
-                            <view>组长</view>
+                <view class="list">
+                    <view class="item" v-for="item in teamData.list">
+                        <image class="u-photo" src="{{item.avatar}}"></image>
+                        <view class="u-name">
+                            <view class="text">{{item.nickname}}</view>
+                            <view class="icons" v-if="item.leader==1">
+                                <view>组长</view>
+                            </view>
+                        </view>
+                        <view class="u-score">
+                            <view class="n">{{item.score}}分</view>
+                            <view class="p">{{item.distance}}公里</view>
                         </view>
                     </view>
-                    <view class="u-score">
-                        <view class="n">{{item.score}}分</view>
-                        <view class="p">{{item.distance}}公里</view>
-                    </view>
                 </view>
             </view>
-        </view>
+        </load>
     </pageWrap>
 </template>
 <script>
@@ -65,7 +67,8 @@
 
         data: {
             groupid:'',
-            teamData:{}
+            teamData:{},
+            detailLoaded:false
         },
 
         computed: {
@@ -81,6 +84,7 @@
 
         methods:{
             init(){
+                this.detailLoaded = false;
                 request.api({
                     "service": "team.getGroupScore",
                     "ksid": this.auth.user.ksid,
@@ -91,6 +95,7 @@
                     if(data.code==0){
                         this.teamData = data.info
                     }
+                    this.detailLoaded = true;
                 })
             },
         },
@@ -244,7 +249,8 @@
     {
     "usingComponents": {
             "pageWrap": "../components/pageWrap",
-            "defaultSection": "../components/defaultSection"
+            "defaultSection": "../components/defaultSection",
+            "load":"../components/loading"
         }
     }
 </config>

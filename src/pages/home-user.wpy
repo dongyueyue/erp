@@ -63,7 +63,19 @@
                 })
             },
             exit(){
-                this.$store.commit('setLoginType',loginType.UNLOGIN)
+                let _this = this;
+                wx.showModal({
+                    title: '提示',
+                    content: '退出登录吗?',
+                    success (res) {
+                        if (res.confirm) {
+                            _this.$store.commit('setLoginType',loginType.UNLOGIN)
+                        } else if (res.cancel) {
+                        }
+                    }
+                })
+
+
             }
         },
         created () {

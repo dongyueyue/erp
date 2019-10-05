@@ -106,11 +106,18 @@ const actions = {
                 }else{
                     context.commit('setAuthorize',authorizeType.UNAUTHORIZE)
                 }
+            },
+            fail:function(res){
+                console.log(res)
             }
         })
 
     },
     initLogin(context){
+        console.log(context)
+        if(context.state.loginType == loginType.LOGIN || context.state.loginType == loginType.HALF){
+            return false;
+        }
         context.dispatch('linkCheckUser',function(data){
             if(data.code==0){
                 context.dispatch('serverLoginByWX',{unionid:data.info.wx_unionid})
