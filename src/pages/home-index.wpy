@@ -16,7 +16,7 @@
     <pageWrap>
 
         <view class="home" v-if="isLogin">
-            <view class="home-item">
+            <view animation="{{createAni()}}" class="home-item">
                 <view class="home-item-title">{{homeData.matchInfo.title}}</view>
                 <view class="toggle" @click="getHistory">
                     <view class="arrow {{rankbar?'up':'down'}}"></view>
@@ -124,6 +124,7 @@
             },
         },
         methods:{
+
             toggle(){
                 this.openList = !this.openList
             },

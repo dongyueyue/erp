@@ -1,4 +1,13 @@
 <style lang="less">
+
+    .activebase{
+        opacity: 0;
+        transition: opacity .5s ease;
+        &.active{
+            opacity: 1;
+
+        }
+    }
     .loading-wrap {
         display:flex;
         width:100%;
@@ -75,10 +84,21 @@
             transform:translate(0,160%)
         }
     }
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+    }
 </style>
 <template>
     <view>
-        <slot v-if="!open"></slot>
+
+        <view  v-if="!open" :class="{'activebase':true,'active':isM}">
+            <slot></slot>
+        </view>
+
+
         <view class="loading-wrap" v-else>
             <view class="loading">
                 <view class="k-balla"></view>
@@ -94,7 +114,7 @@
     import wepy from '@wepy/core'
     wepy.component({
         data: {
-
+            isM:false
         },
         props:['open'],
         events: {
@@ -102,6 +122,15 @@
         },
         computed:{
 
+        },
+        watch:{
+            open(nv){
+                if(!nv){
+                    this.$nextTick(()=>{
+                        this.isM = true
+                    })
+                }
+            }
         },
         methods: {
 

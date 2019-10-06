@@ -3,74 +3,76 @@
 </wxs>
 <template>
     <pageWrap>
-        <view class="rundetail" v-if="isLogin">
-            <view class="banner" style="background-image:url({{rundetials.avatar}})">
-                <view class="title">{{rundetials.title}}</view>
-                <view class="des">[{{rundetials.team_name}}]</view>
-            </view>
-            <view class="section">
-                <view class="s-title">约跑信息</view>
-                <view class="detail-list">
-                    <view class="detail-list-item">
-                        <text>活动名称</text>
-                        <text>{{rundetials.title}}</text>
-                    </view>
-                    <view class="detail-list-item">
-                        <text>活动时间</text>
-                        <text>{{rundetials.start}}</text>
-                    </view>
-                    <view class="detail-list-item">
-                        <text>活动时长</text>
-                        <text>{{rundetials.run_time}}</text>
-                    </view>
-                    <view class="detail-list-item">
-                        <text>活动区间最快配速</text>
-                        <text>{{rundetials.pace_max}}</text>
-                    </view>
-                    <view class="detail-list-item">
-                        <text>活动区间最慢配速</text>
-                        <text>{{rundetials.pace_min}}</text>
-                    </view>
-                    <view class="detail-list-item">
-                        <text>约跑最小公里数</text>
-                        <text>{{rundetials.min_dist}}</text>
+        <load :open="!detailLoaded">
+            <view class="rundetail" v-if="isLogin">
+                <view class="banner" style="background-image:url({{rundetials.avatar}})">
+                    <view class="title">{{rundetials.title}}</view>
+                    <view class="des">[{{rundetials.team_name}}]</view>
+                </view>
+                <view class="section">
+                    <view class="s-title">约跑信息</view>
+                    <view class="detail-list">
+                        <view class="detail-list-item">
+                            <text>活动名称</text>
+                            <text>{{rundetials.title}}</text>
+                        </view>
+                        <view class="detail-list-item">
+                            <text>活动时间</text>
+                            <text>{{rundetials.start}}</text>
+                        </view>
+                        <view class="detail-list-item">
+                            <text>活动时长</text>
+                            <text>{{rundetials.run_time}}</text>
+                        </view>
+                        <view class="detail-list-item">
+                            <text>活动区间最快配速</text>
+                            <text>{{rundetials.pace_max}}</text>
+                        </view>
+                        <view class="detail-list-item">
+                            <text>活动区间最慢配速</text>
+                            <text>{{rundetials.pace_min}}</text>
+                        </view>
+                        <view class="detail-list-item">
+                            <text>约跑最小公里数</text>
+                            <text>{{rundetials.min_dist}}</text>
+                        </view>
                     </view>
                 </view>
-            </view>
-            <view class="section">
-                <view class="s-title">活动内容</view>
-                <view class="detail-text">{{rundetials.introduction}} </view>
-            </view>
-            <view class="section">
-                <view class="s-title">提示</view>
-                <view class="detail-text">
-                    1.参与活动打卡成功，且配速以及跑步计分类型符合PK活动设定，基于打卡记录在活动中的得分会有额外倍数的积分奖励。
-                    2.约跑记录必须当日23点59分59秒前上传到服务器，否则不记录打卡以及加成分数
-                    3.聊天在约跑结束一周后自动解散。
-                    4.约跑位置依据GPS定位，请跑步前确认GPS是开启状态，且EPK具有定位权限，否则无法打卡。
-                    5.当多个约跑间有交集的情况下，只能报名其中一个，当所报名的约跑结束后（开始时间+约跑时长）才可以报名其它有时间交集的约跑。
+                <view class="section">
+                    <view class="s-title">活动内容</view>
+                    <view class="detail-text">{{rundetials.introduction}} </view>
                 </view>
-            </view>
-            <view class="section">
-                <view class="s-title">约跑地点</view>
-                <map class="section-map" scale="15" show-location="true" markers="{{mapData.markers}}" longitude="{{mapData.longitude}}" latitude="{{mapData.latitude}}"></map>
-            </view>
-            <view class="section">
-                <view class="s-title">已报名人员</view>
-                <view class="ready-person">
-                    <view class="ready-person-item" v-for="item in runnerDet">
-                        <image mode="aspectFill" :src="item.user_avatar"></image>
-                        <text>{{item.user_name}}</text>
+                <view class="section">
+                    <view class="s-title">提示</view>
+                    <view class="detail-text">
+                        1.参与活动打卡成功，且配速以及跑步计分类型符合PK活动设定，基于打卡记录在活动中的得分会有额外倍数的积分奖励。
+                        2.约跑记录必须当日23点59分59秒前上传到服务器，否则不记录打卡以及加成分数
+                        3.聊天在约跑结束一周后自动解散。
+                        4.约跑位置依据GPS定位，请跑步前确认GPS是开启状态，且EPK具有定位权限，否则无法打卡。
+                        5.当多个约跑间有交集的情况下，只能报名其中一个，当所报名的约跑结束后（开始时间+约跑时长）才可以报名其它有时间交集的约跑。
                     </view>
                 </view>
-            </view>
+                <view class="section">
+                    <view class="s-title">约跑地点</view>
+                    <map class="section-map" scale="15" show-location="true" markers="{{mapData.markers}}" longitude="{{mapData.longitude}}" latitude="{{mapData.latitude}}"></map>
+                </view>
+                <view class="section">
+                    <view class="s-title">已报名人员</view>
+                    <view class="ready-person">
+                        <view class="ready-person-item" v-for="item in runnerDet">
+                            <image mode="aspectFill" :src="item.user_avatar"></image>
+                            <text>{{item.user_name}}</text>
+                        </view>
+                    </view>
+                </view>
 
-            <view class="btns-bottom">
-                <view class="btn" @click="join">报名</view>
-                <button class="btn" open-type="share">分享</button>
-                <!--<view class="btn" @click="share">分享</view>-->
+                <view class="btns-bottom">
+                    <view class="btn" @click="join">报名</view>
+                    <button class="btn" open-type="share">分享</button>
+                    <!--<view class="btn" @click="share">分享</view>-->
+                </view>
             </view>
-        </view>
+        </load>
     </pageWrap>
 </template>
 <script>
@@ -113,6 +115,7 @@
                 longitude: "",
                 markers: [],
             },
+            detailLoaded:false,
             run_id:'',
             rundetials:{},
             runnerDet:[]
@@ -120,6 +123,7 @@
 
         methods:{
             init(){
+                this.detailLoaded = false;
                 request.api({
                     "service": "run.getRunDetail",
                     "ksid": this.auth.user.ksid,
@@ -155,6 +159,7 @@
                             }
                         }
                     }
+                    this.detailLoaded = true;
                 })
             },
             join(){
@@ -325,7 +330,8 @@
     {
         "usingComponents": {
             "pageWrap": "../components/pageWrap",
-            "defaultSection": "../components/defaultSection"
+            "defaultSection": "../components/defaultSection",
+            "load":"../components/loading"
         }
     }
 </config>

@@ -18,25 +18,27 @@
 </wxs>
 <template>
     <pageWrap>
-        <view class="ranking">
-            <view class="banner" style="background-image:url({{matchData.avatar}})">
-                <view class="title">{{matchData.title}}</view>
-                <view class="time">{{matchData.start}}={{matchData.end}}</view>
-                <view class="desc">{{tempFun.typeFilter(matchData.type)}} 积分赛</view>
-            </view>
-            <view class="rank-list">
-                <view class="rank-card" @click="jump(item.groupid)" v-for="item in matchData.group_list">
-                    <view class="index">{{item.sort}}</view>
-                    <image class="photo" src="{{item.avatar}}"></image>
-                    <view class="details">
-                        <text class="group-name">{{item.name}}</text>
-                        <text class="num">{{item.numb}}人</text>
-                    </view>
-                    <view class="score">{{item.score}}分</view>
+        <load :open="!rankLoaded">
+            <view class="ranking">
+                <view class="banner" style="background-image:url({{matchData.avatar}})">
+                    <view class="title">{{matchData.title}}</view>
+                    <view class="time">{{matchData.start}}={{matchData.end}}</view>
+                    <view class="desc">{{tempFun.typeFilter(matchData.type)}} 积分赛</view>
                 </view>
+                <view class="rank-list">
+                    <view class="rank-card" @click="jump(item.groupid)" v-for="item in matchData.group_list">
+                        <view class="index">{{item.sort}}</view>
+                        <image class="photo" src="{{item.avatar}}"></image>
+                        <view class="details">
+                            <text class="group-name">{{item.name}}</text>
+                            <text class="num">{{item.numb}}人</text>
+                        </view>
+                        <view class="score">{{item.score}}分</view>
+                    </view>
 
+                </view>
             </view>
-        </view>
+        </load>
     </pageWrap>
 </template>
 <script>
@@ -67,7 +69,8 @@
 
         data: {
             matchData:{},
-            matchId:''
+            matchId:'',
+            rankLoaded:false
         },
 
         computed: {
@@ -83,7 +86,8 @@
 
         methods:{
            init(){
-               request.api({
+                this.rankLoaded = false;
+                request.api({
                        "service": "team.getMatchInfo",
                        "ksid": this.auth.user.ksid,
                        "matchid":this.matchId,
@@ -93,7 +97,8 @@
                    if(data.code==0){
                         this.matchData = data.info
                     }
-               })
+                    this.rankLoaded = true;
+                })
            },
            jump(id){
                 wx.navigateTo({
@@ -202,7 +207,8 @@
     {
         "usingComponents": {
             "pageWrap": "../components/pageWrap",
-            "defaultSection": "../components/defaultSection"
+            "defaultSection": "../components/defaultSection",
+            "load":"../components/loading"
         }
     }
 </config>
