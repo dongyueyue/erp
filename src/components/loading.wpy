@@ -92,7 +92,7 @@
     }
 </style>
 <template>
-    <view>
+
 
         <view  v-if="!open" :class="{'activebase':true,'active':isM}">
             <slot></slot>
@@ -107,7 +107,7 @@
                 <view class="k-balld"></view>
             </view>
         </view>
-    </view>
+    
 
 </template>
 <script>

@@ -373,8 +373,9 @@
             .home-match-list.rankbar{
                 overflow:hidden;
                 max-height:500rpx;
+                transition: max-height .5s ease;
                 &.showmore{
-                    max-height:5000rpx;
+                    max-height:2000rpx;
                  }
                 .progress-li{
                     padding-left:40rpx;
