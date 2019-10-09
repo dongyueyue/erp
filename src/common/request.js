@@ -1,4 +1,4 @@
-const testurl = 'http://api-test.17epk.com/Wechat/';
+const testurl = 'https://api-test.17epk.com/Wechat/';
 const host = 'https://api.epk.kingsmith.com.cn/Wechat/'
 export default {
     request:function(params){
