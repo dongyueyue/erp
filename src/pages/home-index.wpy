@@ -216,7 +216,7 @@
         background:#F4F5F9;
     }
     .more-btn{
-        height: 30rpx;
+        height: 50rpx;
         width: 100%;
         position: absolute;
         bottom:0;
@@ -230,7 +230,6 @@
 
             border-radius: 100%;
             border:3rpx solid #b7b4ba;
-            margin-top:-17rpx;
          }
         &:after,&:before{
             content:'';
