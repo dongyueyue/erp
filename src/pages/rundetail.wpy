@@ -1,11 +1,15 @@
-<wxs module="m1" lang="babel">
-
+<wxs module="tempFun" lang="babel">
+    const minuteFilter = (time) => {
+        return Math.ceil(time/60)
+    }
+    module.exports.minuteFilter = minuteFilter;
 </wxs>
 <template>
     <pageWrap>
         <load :open="!detailLoaded">
             <view class="rundetail" v-if="isLogin">
-                <view class="banner" style="background-image:url({{rundetials.avatar}})">
+                <view class="banner" >
+                    <view class="bk" style="background-image:url({{rundetials.avatar}})"></view>
                     <view class="title">{{rundetials.title}}</view>
                     <view class="des">[{{rundetials.team_name}}]</view>
                 </view>
@@ -22,19 +26,15 @@
                         </view>
                         <view class="detail-list-item">
                             <text>活动时长</text>
-                            <text>{{rundetials.run_time}}</text>
+                            <text>{{tempFun.minuteFilter(rundetials.run_time)}}分钟</text>
                         </view>
                         <view class="detail-list-item">
-                            <text>活动区间最快配速</text>
-                            <text>{{rundetials.pace_max}}</text>
-                        </view>
-                        <view class="detail-list-item">
-                            <text>活动区间最慢配速</text>
-                            <text>{{rundetials.pace_min}}</text>
+                            <text>活动区间配速</text>
+                            <text>{{rundetials.pace_min}} - {{rundetials.pace_max}}</text>
                         </view>
                         <view class="detail-list-item">
                             <text>约跑最小公里数</text>
-                            <text>{{rundetials.min_dist}}</text>
+                            <text>{{rundetials.min_dist}}公里</text>
                         </view>
                     </view>
                 </view>
@@ -45,15 +45,16 @@
                 <view class="section">
                     <view class="s-title">提示</view>
                     <view class="detail-text">
-                        1.参与活动打卡成功，且配速以及跑步计分类型符合PK活动设定，基于打卡记录在活动中的得分会有额外倍数的积分奖励。
-                        2.约跑记录必须当日23点59分59秒前上传到服务器，否则不记录打卡以及加成分数
-                        3.聊天在约跑结束一周后自动解散。
-                        4.约跑位置依据GPS定位，请跑步前确认GPS是开启状态，且EPK具有定位权限，否则无法打卡。
-                        5.当多个约跑间有交集的情况下，只能报名其中一个，当所报名的约跑结束后（开始时间+约跑时长）才可以报名其它有时间交集的约跑。
+                        <view>1.参与活动打卡成功，且配速以及跑步计分类型符合PK活动设定，基于打卡记录在活动中的得分会有额外倍数的积分奖励。</view>
+                        <view>2.约跑记录必须当日23点59分59秒前上传到服务器，否则不记录打卡以及加成分数</view>
+                        <view>3.聊天在约跑结束一周后自动解散。</view>
+                        <view>4.约跑位置依据GPS定位，请跑步前确认GPS是开启状态，且EPK具有定位权限，否则无法打卡。</view>
+                        <view>5.当多个约跑间有交集的情况下，只能报名其中一个，当所报名的约跑结束后（开始时间+约跑时长）才可以报名其它有时间交集的约跑。</view>
                     </view>
                 </view>
                 <view class="section">
                     <view class="s-title">约跑地点</view>
+                    <view class="s-des">{{rundetials.site}}</view>
                     <map class="section-map" scale="15" show-location="true" markers="{{mapData.markers}}" longitude="{{mapData.longitude}}" latitude="{{mapData.latitude}}"></map>
                 </view>
                 <view class="section">
@@ -204,22 +205,38 @@
 <style lang="less">
     .rundetail{
         padding-bottom:100rpx;
+        color:#666;
         .banner{
             height: 360rpx;
             background: #000;
             box-sizing:border-box;
             padding-top:100rpx;
             margin-bottom:60rpx;
+            position:relative;
+            .bk{
+               width: 100%;
+               height: 100%;
+               position: absolute;
+                left:0;
+                top:0;
+                background: no-repeat;
+                background: cover;
+                opacity: 0.5;
+                z-index: 0;
+            }
             .title{
                 color: #fff;
                 font-size: 56rpx;
                 text-align: center;
                 margin-bottom: 28rpx;
+                position:relative;
+                padding: 0 30rpx;
             }
             .des{
                 color: #fff;
                 font-size: 30rpx;
                 text-align: center;
+                position:relative;
             }
         }
         .section{
@@ -246,6 +263,11 @@
                 display:flex;
                 align-items:center;
             }
+            .s-des{
+                font-size:30rpx;
+                padding:25rpx;
+                padding-top:10rpx;
+            }
             .detail-list{
                 width:570rpx;
                 margin:0 auto;
@@ -256,7 +278,8 @@
                     font-size:26rpx;
                     padding-right:10rpx;
                     height:90rpx;
-                    border-bottom: 1rpx solid #F1F1F1;
+                    color:#666;
+                    border-bottom: 2rpx solid #F1F1F1;
                 }
             }
             .detail-text{
@@ -265,6 +288,10 @@
                 line-height:48rpx;
                 font-size:30rpx;
                 padding-bottom:35rpx;
+                view{
+                    margin-bottom:25rpx;
+                    text-indent: 90rpx;
+                }
             }
             .section-map{
                 width: 624rpx;

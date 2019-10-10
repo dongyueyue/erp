@@ -229,7 +229,7 @@
         &.circle{
 
             border-radius: 100%;
-            border:4rpx solid #b7b4ba;
+            border:3rpx solid #b7b4ba;
             margin-top:-17rpx;
          }
         &:after,&:before{
@@ -243,11 +243,11 @@
          }
          &.down{
             &:after{
-                 right:13rpx;
+                 right:12rpx;
                  transform: rotate(45deg);
              }
             &:before{
-                 left:11rpx;
+                 left:12rpx;
                  transform: rotate(-45deg);
              }
           }
@@ -258,7 +258,7 @@
                  transform: rotate(-45deg);
              }
             &:before{
-                 left:10rpx;
+                 left:12rpx;
                  transform: rotate(45deg);
              }
         }
