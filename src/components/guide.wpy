@@ -1,3 +1,4 @@
+<!--引导用户授权组件-->
 <style lang="less">
     .guide{
         width: 100%;

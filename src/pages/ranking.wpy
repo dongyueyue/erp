@@ -1,3 +1,4 @@
+<!--小队排行-->
 <wxs module="tempFun" lang="babel">
     const typeFilter = (type) => {
         if(type==1){

@@ -1,3 +1,4 @@
+<!--活动详情-->
 <wxs module="tempFun" lang="babel">
     const minuteFilter = (time) => {
         return Math.ceil(time/60)

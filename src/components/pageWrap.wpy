@@ -1,3 +1,4 @@
+<!--页面外层组件 用于添加全页面公共组件-->
 <style lang="less">
     .appPage{
        width: 100%;

@@ -1,3 +1,4 @@
+<!--打开app组件-->
 <style lang="less">
     .openApp{
        width: 750rpx;
@@ -36,7 +37,7 @@
     }
 </style>
 <template>
-    <view class="openApp">
+    <view class="openApp" v-if="canshow">
         <image src="../images/logo_s.png"></image>
         <view class="txt">进入App与跑友一起参与PK</view>
         <button open-type="launchApp" app-parameter="wechat" binderror="launchAppError">打开app</button>
@@ -46,7 +47,7 @@
     import wepy from '@wepy/core'
     wepy.component({
         data: {
-
+            canshow:false
         },
         props:['type','open'],
         events: {
@@ -66,7 +67,12 @@
             }
         },
         created(){
-
+            let data = wx.getLaunchOptionsSync()
+            if(data.scene == 1036 || data.scene == 1069){
+                this.canshow = true;
+            }else{
+                this.canshow = false;
+            }
         },
     });
 </script>

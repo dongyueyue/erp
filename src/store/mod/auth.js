@@ -1,3 +1,4 @@
+// 用户权限状态管理
 import config from './authConfig';
 import request from '../../common/request';
 const loginType = config.loginType
@@ -58,6 +59,7 @@ const mutations = {
 }
 
 const actions = {
+    // 获取微信用户信息
     getWXUserInfo(context,cb){
         wx.getSetting({
             success(res) {
@@ -86,6 +88,7 @@ const actions = {
             }
         })
     },
+    // 检查用户是否在erp注册
     linkCheckUser(context,callback){
         wx.login({
             success:function(loginData){
@@ -113,6 +116,7 @@ const actions = {
         })
 
     },
+    //直接使用微信登录
     initLogin(context){
         console.log(context)
         if(context.state.loginType == loginType.LOGIN || context.state.loginType == loginType.HALF){
@@ -124,6 +128,7 @@ const actions = {
             }
         })
     },
+    //向服务端查询用户是否注册
     checkUser(context,option){
         request.api({
             "service": "WechatMini.CheckUser",
@@ -135,6 +140,7 @@ const actions = {
             option.cb&&option.cb(data)
         })
     },
+    // 向服务端登录
     serverLoginByWX(context,params){
         request.api({
             "service": "WechatMini.MiniLogin",
@@ -152,6 +158,7 @@ const actions = {
             }
         })
     },
+    // 授权失败转换为未授权状态
     authorizeFaillToUN(context){
         if(context.state.authorize == authorizeType.FAIL){
             context.commit('setAuthorize',authorizeType.UNAUTHORIZE)

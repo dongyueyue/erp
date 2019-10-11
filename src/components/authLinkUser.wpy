@@ -1,3 +1,4 @@
+<!--手机与微信号绑定组件-->
 <style lang="less">
     .authLink-wrap{
         width: 100%;
